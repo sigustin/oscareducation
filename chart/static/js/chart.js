@@ -199,10 +199,16 @@ function chart_createChart(element)
         if(rawData != undefined)
         {
             var test =String(rawData);
+            console.log(test);
             for(var temp = 0;temp<100;temp++) // I don't know why, but we must pass the regex as much as there answers
                 test = test.replace(/u'(?=[^:]+')/g, "'").replace(/'/g, '"').replace('u"', '"').replace("False", 'false').replace("True", 'true').replace('"{', '{').replace('}"', '}').replace('u"', '"')
+
+
+            console.log(test);
             var parsed =  JSON.parse(test);
-            let r = parsed[0].chart;
+            console.log(parsed);
+            let r = parsed[0];
+            console.log(r);
             box = [r.zeroX, r.maxY,r.maxX,r.zeroY];
         }
 

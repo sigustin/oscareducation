@@ -1404,7 +1404,7 @@ def exercice_validation_form_validate_exercice(request):
             questions[question["instructions"]] = {
                 "type": question["type"],
                 #GROUPE 7 on enregistre dans la BD
-                "answers": [[y for y in x["chart"]] for x in question["answers"]],
+                "answers": [x["chart"] for x in question["answers"]],
             }
         # No provided answer if corrected by a Professor
         elif question["type"] == "professor":

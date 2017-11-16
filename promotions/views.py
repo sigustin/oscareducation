@@ -1565,6 +1565,8 @@ def exercice_validation_form_submit(request, pk=None):
                         del answer["correct"]
                     if "text" in answer:
                         del answer["text"]
+                    if "graph" in answer:
+                        del answer["graph"]
                     answers.append(answer)
 
                 new_question_answers = {

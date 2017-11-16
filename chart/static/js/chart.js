@@ -167,6 +167,7 @@ function chart_createChart(element)
     var type = $(element).data( "chart-type" );
 
     var rawData = $(element).data( "chart-raw" );
+    var rawData2 = $(element).data( "chart-raw2" );
     var dataArr = $(element).data("chart-percent");
     var board;
     if(type.includes("piechart"))
@@ -191,6 +192,11 @@ function chart_createChart(element)
     {
         var box = [-1, 5, 5, -1];
 
+        if(rawData2 != null)
+        {
+            rawData = chart_parse_orderedDict(rawData2);
+            console.log(rawData)
+        }
         /*
             if there is data given from the server, we must parse it.
             We all write bad code, but if it works, it works.
@@ -208,8 +214,10 @@ function chart_createChart(element)
             var parsed =  JSON.parse(test);
             console.log(parsed);
             let r = parsed[0];
+            if(rawData2 != null)r = parsed;
             console.log(r);
             box = [r.zeroX, r.maxY,r.maxX,r.zeroY];
+            console.log(box);
         }
 
         let board = JXG.JSXGraph.initBoard(element.id, { axis:true,showCopyright:false, boundingbox: box,showNavigation : false});
@@ -314,4 +322,9 @@ function chart_roundToStep(number,step)
     var highest = step * Math.ceil(number/step);
     if(number-lowest > highest-number)return highest;
     return lowest;
+}
+
+function chart_parse_orderedDict(orderedDictStr)
+{
+    return orderedDictStr.substring(orderedDictStr.indexOf("chart")+9,orderedDictStr.lastIndexOf('}')+1);
 }

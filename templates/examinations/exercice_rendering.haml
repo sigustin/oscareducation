@@ -42,6 +42,9 @@
           -elif answer.type == "chart-barchart"
             -# Group 7
             %p (Group 07) File 'templates/examinations/exercice_rendering.haml' doesn't contain information to display here.
+          -elif answer.type == "chart-piechart"
+            -# Group 7
+            %p (Group 07) File 'templates/examinations/exercice_rendering.haml' doesn't contain information to display here.
           -elif answer.type == "professor"
             %input.form-control{id: "{{ forloop.counter0 }}", name: "{{ forloop.counter0 }}", type: "text", autocomplete: "off"}
             -#%textarea.form-control{id: "{{ forloop.counter0 }}", name: "{{ forloop.counter0 }}", rows: "5"}

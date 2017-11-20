@@ -55,6 +55,16 @@
         -for ans in answers
            %li= ans
         %p Réponses :
+    -elif answer.type == "chart-piechart"
+    	-# Group 7
+        %p (Group 07) File 'templates/professor/exercice/exercice_with_answers_rendering.haml' doesn't contain information to display here.
+        {{ forloop.counter0 }}
+        {{ name }}
+        {{answer}}
+        iotgnroin
+        -for ans in answers
+           %li= ans
+        %p Réponses :
     -elif answer.type == "professor"
       %span
         %p

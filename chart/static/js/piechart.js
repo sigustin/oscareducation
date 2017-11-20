@@ -78,9 +78,6 @@ function create_pieChart(sum)//complete is a boolean determining if the pieChart
 	    		app.push((100-sum)/(this.maxSector-dataArr.length))
 	   		}
 		}
-		alert("create")
-		alert(app)
-		alert(this.dataArr)
 		element = graphics[i]
 		element.id = "board"+i;
 		board = JXG.JSXGraph.initBoard(element.id, {id:"chart-pieChartFromForm-"+i,showNavigation:false, showCopyright:false, boundingbox: [-5, 5, 5, -5]});
@@ -103,14 +100,10 @@ function create_pieChart(sum)//complete is a boolean determining if the pieChart
 
 function chart_deleteLastPie()
 {
-	alert(this.dataColor)
 	this.dataColor[this.dataArr.length-1] = '#FFFFFF'
-	alert(this.dataColor)
 	this.dataArr.pop()
 	this.labels.pop()
 	var sum = 0
-	alert("delete")
-	alert(this.dataArr)
 	for(var j = 0;j<this.maxSector;j++)
 	{
 		if(j < this.dataArr.length)
@@ -123,8 +116,6 @@ function chart_deleteLastPie()
 			sum = sum + this.dataArr[j]
 		}
 	}
-	alert("sum")
-	alert(sum)
 	create_pieChart(sum)
 }
 

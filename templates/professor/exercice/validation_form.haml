@@ -181,7 +181,7 @@
                       %button.btn.btn-danger.btn-deleteBar{onclick: "chart_deleteLastBar($(this))", type: "button"}
                         %span.glyphicon.glyphicon-minus
                         Supprimer la dernière
-                  -# = .jxgbox.chartQuestion.chartQuestionValidation#jxgbox{style:"width:100%; height:676px;",data-chart-type:"piechart",data-chart-percent:'[20,30,50]',data-chart-label:'["math","francais","Sciences"]'}
+                  -# = .jxgbox.chartQuestion.chartQuestionValidation.chartQuestionBarchart#jxgbox{style:"width:100%; height:676px;",data-chart-type:"piechart",data-chart-percent:'[20,30,50]',data-chart-label:'["math","francais","Sciences"]'}
 
                 .form-horizontal{ng-if: "question.type == \"chart-piechart\""}
                   .form-group
@@ -197,10 +197,10 @@
                         %span.glyphicon.glyphicon-plus
                         Ajouter
                     .col-sm-2
-                      %button.btn.btn-danger.btn-deletePie{onclick: "chart_deleteLastPie()", type: "button"}
+                      %button.btn.btn-danger.btn-deletePie{onclick: "chart_deleteLastPie($(this))", type: "button", class:"btn-deletePie"}
                         %span.glyphicon.glyphicon-minus
                         Supprimer la dernière
-                  .jxgbox.chartQuestion.chartQuestionValidation#jxgbox{id:pieChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart"}
+                  .jxgbox.chartQuestion.chartQuestionValidation.chartQuestionPiechart#jxgbox{id:pieChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart"}
                   -# = .jxgbox.chartQuestion.chartQuestionValidation#jxgbox{style:"width:100%; height:676px;",data-chart-type:"piechart",data-chart-percent:'[20,30,50]',data-chart-label:'["math","francais","Sciences"]'}
 
                 .form-horizontal{ng-if: "question.type == \"graph\""}

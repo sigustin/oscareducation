@@ -1,24 +1,36 @@
-dataArr = []
-labels = []
+dataArr = [[]];
+labels = [[]];
 colors = ['#0F408D','#6F1B75','#CA147A','#DA2228','#E8801B','#FCF302','#8DC922','#15993C','#87CCEE','#0092CE']
 function chart_createPieChartFromForm()
 {
-	graphics = document.getElementsByClassName("chartQuestionValidation");
+	graphics = document.getElementsByClassName("chartQuestionPiechart");
 	var element;
 	for(var i = 0;i<graphics.length;i++)
     {
   		var type = $(graphics[i]).data( "chart-type" );
 		if(type == "chart-piechart")
 	    {
-			var sector = (($(".sector").eq(i).val())/360)*100
-			var label = $(".labelPie").eq(i).val()
-			var sum = dataArr.reduce(function(a, b) { return a + b; }, 0);
+			var sector = (($(".sector").eq(i).val())/360)*100;
+			var label = $(".labelPie").eq(i).val();
+
+			$(".sector").eq(i).val('');
+
+			while(dataArr.length<=i)dataArr.push([]);
+			while(labels.length<=i)labels.push([]);
+
+
+			var sum = dataArr[i].reduce(function(a, b) { return a + b; }, 0);
+			if(sector == undefined ||sector == null || sector == '')
+			{
+				continue;
+			}
 			if(sum+sector>100){
 				alert('la valeur entrée est trop grande ! Veuillez la réduire ou supprimer des portions précedentes');
 				continue;
 			}
-			this.dataArr.push(sector)
-			this.labels.push(label)
+
+			this.dataArr[i].push(sector)
+			this.labels[i].push(label)
 	    	{
 	    		create_pieChart(graphics[i],i);
 	    	}
@@ -33,11 +45,11 @@ function create_pieChart(element,index)//complete is a boolean determining if th
 	var sum = 0;
 	var lastPortion = [];
 
-	for(var i = 0;i<dataArr.length;i++)
+	for(var i = 0;i<dataArr[index].length;i++)
 	{
 		colorsChart.push(colors[i%colors.length]);
-		labelsChart.push(labels[i%labels.length]);
-		sum+=dataArr[i];
+		labelsChart.push(labels[index][i%labels.length]);
+		sum+=dataArr[index][i];
 	}
 
 
@@ -52,7 +64,7 @@ function create_pieChart(element,index)//complete is a boolean determining if th
 	board.containerObj.style.backgroundColor = 'white';
 	board.options.label.strokeColor = 'black';
 	board.suspendUpdate();
-	let a = board.create('chart', this.dataArr.concat(lastPortion),
+	let a = board.create('chart', this.dataArr[index].concat(lastPortion),
 		{chartStyle:'pie',
 		 colors:colorsChart,
 		 fillOpacity:1, center:[0,0], strokeColor:'black', highlightStrokeColor:'black', strokeWidth:0,
@@ -66,21 +78,10 @@ function create_pieChart(element,index)//complete is a boolean determining if th
 
 }
 
-function chart_deleteLastPie()
+function chart_deleteLastPie(element)
 {
-	this.dataArr.pop()
-	this.labels.pop()
-	/*for(var j = 0;j<this.maxSector;j++)
-	{
-		if(j < this.dataArr.length)
-		{
-			this.dataColor[j] = this.colors[j]
-		}
-		if(this.dataColor[j] != '#FFFFFF' && j < this.dataArr.length)
-		{
-			alert(this.dataArr[j])
-			sum = sum + this.dataArr[j]
-		}
-	}*/
-	create_pieChart(document.getElementsByClassName("chartQuestionValidation")[0],0)
+    var index = $(".btn-deletePie").index(element);
+	this.dataArr[index].pop()
+	this.labels[index].pop()
+	create_pieChart(document.getElementsByClassName("chartQuestionPiechart")[index],index)
 }

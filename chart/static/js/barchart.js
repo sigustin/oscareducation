@@ -90,7 +90,7 @@ function chart_setOrigin(zX,zY,mX,mY,which)
 
 function chart_createBarChartFromForm()
 {
-	graphics = document.getElementsByClassName("chartQuestionValidation");
+	graphics = document.getElementsByClassName("chartQuestionBarchart");
 	var element;
 	for(var i = 0;i<graphics.length;i++)
     {
@@ -156,8 +156,8 @@ function chart_createBarChartFromForm()
             if(this.bars[i] != undefined)
                 if(this.bars[i].length >0)
                      char = board.create('chart', [this.bars[i]],
-                                {chartStyle:'bar', width:1, labels:this.bars[i],fillOpacity:chart_opacity,
-                                 colorArray:['#8E1B77','#BE1679','#DC1765','#DA2130','#DB311B','#DF4917','#E36317','#E87F1A','#F1B112','#FCF302','#C1E212'], shadow:false});
+                        {chartStyle:'bar', width:1, labels:this.bars[i],fillOpacity:chart_opacity,
+                         colorArray:['#8E1B77','#BE1679','#DC1765','#DA2130','#DB311B','#DF4917','#E36317','#E87F1A','#F1B112','#FCF302','#C1E212'], shadow:false});
 
         }
 	}
@@ -173,24 +173,6 @@ function chart_createChart(element)
     var rawData = $(element).data( "chart-raw" );
     var dataArr = $(element).data("chart-percent");
     var board;
-    if(type.includes("piechart"))
-    {
-        /*board = JXG.JSXGraph.initBoard(element.id, {showNavigation:false, showCopyright:false, boundingbox: [-5, 5, 5, -5]});
-        board.containerObj.style.backgroundColor = 'white';
-        board.options.label.strokeColor = 'black';
-        board.suspendUpdate();
-        let a = board.create('chart', dataArr,
-            {chartStyle:'pie',
-             colors:['#0F408D','#6F1B75','#CA147A','#DA2228','#E8801B','#FCF302','#8DC922','#15993C','#87CCEE','#0092CE'],
-             fillOpacity:0.8, center:[0,0], strokeColor:'black', highlightStrokeColor:'black', strokeWidth:1,
-             labels:$(element).data("chart-label"),
-             highlightColors:['#E46F6A','#F9DF82','#F7FA7B','#B0D990','#69BF8E','#BDDDE4','#92C2DF','#637CB0','#AB91BC','#EB8EBF'],
-             highlightOnSector:true,
-             highlightBySize:true
-            }
-        );
-        board.unsuspendUpdate();*/
-    }
     if(type.includes("chart-barchart"))
     {
         var box = [-1, 5, 5, -1];
@@ -203,7 +185,7 @@ function chart_createChart(element)
         if(rawData != undefined)
         {
             var test =String(rawData);
-            for(var temp = 0;temp<100;temp++) // I don't know why, but we must pass the regex as much as there answers
+            for(var temp = 0;temp<100;temp++) // I don't know why, but we must pass the regex as much as there is answers. I hope there won't be more than 100
                 test = test.replace(/u'(?=[^:]+')/g, "'").replace(/'/g, '"').replace('u"', '"').replace("False", 'false').replace("True", 'true').replace('"{', '{').replace('}"', '}').replace('u"', '"')
             var parsed =  JSON.parse(test);
             let r = parsed[0].chart;
@@ -266,7 +248,6 @@ function chart_changeScopeQuestions(questions)
     {
         if(questions[i].type == "chart-barchart")
         {
-
             for(var j = 0;j<questions[i].answers.length;j++)
             {
                 questions[i].answers[j].chart = chart_getJSON(counter);

@@ -13,6 +13,7 @@ var maxX = [];
 var maxY = [];
 var points = [[]];
 var precisionValue = [];
+var chart_opacity = 1;
 $( document ).ready(function() {
     chart_refresh();
 });
@@ -120,7 +121,7 @@ function chart_createBarChartFromForm()
         	chart_setOrigin(zX,zY,mX,mY,i);
 
             element.id = "board"+i;
-            let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,axis:false,showCopyright:false, boundingbox: [this.zeroX[i], this.maxY[i], this.maxX[i], this.zeroY[i]]});
+            let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,fillOpacity:chart_opacity,axis:false,showCopyright:false, boundingbox: [this.zeroX[i], this.maxY[i], this.maxX[i], this.zeroY[i]]});
             this.boardBarChart[i] = board;
         	xaxis = board.create('axis', [[0,0],[1,0]],
         				{name:this.AxisX[i],
@@ -155,7 +156,7 @@ function chart_createBarChartFromForm()
             if(this.bars[i] != undefined)
                 if(this.bars[i].length >0)
                      char = board.create('chart', [this.bars[i]],
-                                {chartStyle:'bar', width:1, labels:this.bars[i],
+                                {chartStyle:'bar', width:1, labels:this.bars[i],fillOpacity:chart_opacity,
                                  colorArray:['#8E1B77','#BE1679','#DC1765','#DA2130','#DB311B','#DF4917','#E36317','#E87F1A','#F1B112','#FCF302','#C1E212'], shadow:false});
 
         }

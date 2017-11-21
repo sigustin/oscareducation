@@ -5,15 +5,23 @@
 # pyhamcrest has to be installed
 # doc: http://pyhamcrest.readthedocs.io/en/release-1.8/tutorial/
 
-from hamcrest import *
 import unittest
+from selenium import webdriver
+from selenium.webdriver.comm.keys import Keys
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support import WebDriverWait
 
-class ExampleTest(unittest.TestCase):
-	def example_equals(self):
-		a = 1
-		b = 1
-		assert_that(a, equal_to(b))
-		assert_that(a, is_(b))  # same as the line before (syntactic sugar)
+class TeacherSide(unittest.TestCase):
+	
+	def setUp(self):
+		self.driver = webdriver.Firefox()
+		driver = self.driver
+		driver.get("http://127.0.01:8000")
+		wait = WebDriverWait(driver, 10)
+		#assert "No results found." not in driver.page_source
+		
+	def tearDown(self):
+		self.driver.close()
 
 if __name__ == '__main__':
 	unittest.main()

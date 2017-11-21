@@ -29,6 +29,9 @@ function chart_changeInput($scope)
     $scope.zeroY = -1;
     $scope.maxX = 10;
     $scope.maxY = 10;
+
+    $scope.sector = 90;
+    $scope.labelPie = "secteur";
 }
 
 function chart_refresh()
@@ -171,7 +174,7 @@ function chart_createChart(element)
     var board;
     if(type.includes("piechart"))
     {
-        board = JXG.JSXGraph.initBoard(element.id, {showNavigation:false, showCopyright:false, boundingbox: [-5, 5, 5, -5]});
+        /*board = JXG.JSXGraph.initBoard(element.id, {showNavigation:false, showCopyright:false, boundingbox: [-5, 5, 5, -5]});
         board.containerObj.style.backgroundColor = 'white';
         board.options.label.strokeColor = 'black';
         board.suspendUpdate();
@@ -185,7 +188,7 @@ function chart_createChart(element)
              highlightBySize:true
             }
         );
-        board.unsuspendUpdate();
+        board.unsuspendUpdate();*/
     }
     if(type.includes("chart-barchart"))
     {

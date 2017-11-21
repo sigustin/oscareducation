@@ -182,12 +182,8 @@
                         %span.glyphicon.glyphicon-minus
                         Supprimer la dernière
                   -# = .jxgbox.chartQuestion.chartQuestionValidation#jxgbox{style:"width:100%; height:676px;",data-chart-type:"piechart",data-chart-percent:'[20,30,50]',data-chart-label:'["math","francais","Sciences"]'}
-                  
+
                 .form-horizontal{ng-if: "question.type == \"chart-piechart\""}
-                  .form-group
-                    %label.control-label.col-sm-3 Nombre maximum de secteurs
-                    .col-sm-3
-                      %input.form-control{id: "maxSector",class: "maxSector",type: "number", ng-model: "maxSector", ng-required: "false"}
                   .form-group
                     %label.control-label.col-sm-3 Amplitude du secteur
                     .col-sm-3

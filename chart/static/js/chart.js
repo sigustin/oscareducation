@@ -39,6 +39,22 @@ function chart_refresh()
     }
     chart_createBarChartFromForm()
 
+    if($("#barchart-hiddenInput"))
+    {
+        //update the hidden field every 1/2 second. It works.
+        setInterval(function(){
+            var bar = [];
+            for(var i = 0;i<points[0].length;i++){
+                bar.push(chart_getPointValue(points[0],i)());
+            }
+
+            $("#barchart-hiddenInput").val(bar);
+
+            console.log(bar)
+        }, 500);
+
+    }
+
 }
 
 function chart_setBars()
@@ -83,6 +99,100 @@ function chart_setOrigin(zX,zY,mX,mY,which)
 	this.maxX[which]= mX;
 	this.maxY[which] = mY;
 }
+
+
+function chart_updateForStudent()
+{
+    graphics = document.getElementsByClassName("chartQuestionStudent");
+	console.log(graphics)
+	var element;
+	for(var i = 0;i<graphics.length;i++)
+	{
+
+        element = graphics[i];
+        var rawData = $(element).data( "chart-raw" );
+        var rawData2 = $(element).data( "chart-raw2" );
+        var rawData3 = $(element).data( "chart-raw3" );
+
+        precisionValue[i] = 1;
+        element.id = "board"+i;
+        var r = {};
+        r.AxisX = " nope";
+        r.AxisY = " Nope";
+        var box = [-1, 5, 5, -1];
+
+
+        if(rawData2 != null)
+        {
+            rawData = chart_parse_orderedDict(rawData2);
+        }
+        if( rawData3 != null)
+        {
+            rawData = chart_parse_orderedDict(rawData3);
+        }
+        /*
+            if there is data given from the server, we must parse it.
+            We all write bad code, but if it works, it works.
+            Don't judge, morty.
+        */
+        if(rawData != undefined)
+        {
+            var test =String(rawData);
+            for(var temp = 0;temp<100;temp++) // I don't know why, but we must pass the regex as much as there answers
+                test = test.replace(/u'(?=[^:]+')/g, "'").replace(/'/g, '"').replace('u"', '"').replace("False", 'false').replace("True", 'true').replace('"{', '{').replace('}"', '}').replace('u"', '"')
+
+
+            var parsed =  JSON.parse(test);
+            r = parsed[0];
+            if(rawData2 != null)r = parsed;
+            if(rawData3 != null)r = parsed;
+            box = [r.zeroX, r.maxY,r.maxX,r.zeroY];
+        }
+
+        let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,axis:false,showCopyright:false, boundingbox:box});
+        this.boardBarChart[i] = board;
+        xaxis = board.create('axis', [[0,0],[1,0]],
+                    {name:r.AxisX,
+                    withLabel:true,
+                    label: {
+                        position:'rt',
+                        offset:[-15,20]
+                        }
+                    });
+        yaxis = board.create('axis', [[0,0],[0,1]],
+                    {name:AxisY,
+                    withLabel:true,
+                    label: {
+                        position:'rt',
+                        offset:[20,0]
+                        }
+                    });
+        var temp =[];
+        if(this.points[i] == undefined) this.points[i] = [];
+        if(this.bars[i] == undefined) this.bars[i] = [];
+        for(var j = 0;j<this.points[i].length;j++)
+        {
+            let p = this.boardBarChart[i].create('point',[j+1,this.points[i][j].Y()],{name:'',size:7,face:'^'});
+            temp.push(p);
+        }
+        this.points[i] = temp;
+        this.bars[i] = []
+        for(var j = 0;j<this.points[i].length;j++)
+        {
+            this.bars[i].push(chart_getPointValue(this.points[i],j));
+        }
+        let chart;
+        if(this.bars[i] != undefined)
+            if(this.bars[i].length >0)
+                 char = board.create('chart', [this.bars[i]],
+                            {chartStyle:'bar', width:1, labels:this.bars[i],
+                             colorArray:['#8E1B77','#BE1679','#DC1765','#DA2130','#DB311B','#DF4917','#E36317','#E87F1A','#F1B112','#FCF302','#C1E212'], shadow:false});
+
+	}
+
+
+}
+
 
 function chart_createBarChartFromForm()
 {
@@ -168,6 +278,7 @@ function chart_createChart(element)
 
     var rawData = $(element).data( "chart-raw" );
     var rawData2 = $(element).data( "chart-raw2" );
+    var rawData3 = $(element).data( "chart-raw3" );
     var dataArr = $(element).data("chart-percent");
     var board;
     if(type.includes("piechart"))
@@ -195,7 +306,10 @@ function chart_createChart(element)
         if(rawData2 != null)
         {
             rawData = chart_parse_orderedDict(rawData2);
-            console.log(rawData)
+        }
+        if( rawData3 != null)
+        {
+            rawData = chart_parse_orderedDict(rawData3);
         }
         /*
             if there is data given from the server, we must parse it.
@@ -205,22 +319,19 @@ function chart_createChart(element)
         if(rawData != undefined)
         {
             var test =String(rawData);
-            console.log(test);
             for(var temp = 0;temp<100;temp++) // I don't know why, but we must pass the regex as much as there answers
                 test = test.replace(/u'(?=[^:]+')/g, "'").replace(/'/g, '"').replace('u"', '"').replace("False", 'false').replace("True", 'true').replace('"{', '{').replace('}"', '}').replace('u"', '"')
 
 
-            console.log(test);
             var parsed =  JSON.parse(test);
-            console.log(parsed);
             let r = parsed[0];
             if(rawData2 != null)r = parsed;
-            console.log(r);
+            if(rawData3 != null)r = parsed;
             box = [r.zeroX, r.maxY,r.maxX,r.zeroY];
-            console.log(box);
         }
 
         let board = JXG.JSXGraph.initBoard(element.id, { axis:true,showCopyright:false, boundingbox: box,showNavigation : false});
+        this.boardBarChart[0] = board;
        	var l = [];
        	var bar = [];
        	p = [];
@@ -233,7 +344,17 @@ function chart_createChart(element)
         	bar.push(chart_getPointValue(p,i));
         }
 
+        let chart;
+        if(this.bars[0] != undefined)
+            if(this.bars[0].length >0)
+                 char = board.create('chart', [this.bars[0]],
+                            {chartStyle:'bar', width:1, labels:this.bars[0],
+                             colorArray:['#8E1B77','#BE1679','#DC1765','#DA2130','#DB311B','#DF4917','#E36317','#E87F1A','#F1B112','#FCF302','#C1E212'], shadow:false});
+
+
     }
+
+    chart_updateForStudent();
 }
 
 function chart_getPointValue(points,index)
@@ -264,6 +385,7 @@ function chart_btnUpdate(element)
 function chart_update()
 {
     chart_createBarChartFromForm();
+    chart_updateForStudent();
 
 }
 

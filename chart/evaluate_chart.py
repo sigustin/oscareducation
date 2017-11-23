@@ -13,6 +13,7 @@ import yamlordereddictloader
 import json
 import re
 
+
 def evaluate_chart(question, response):
     raw_correct_answers = question.get_answer()
     evaluation_type = raw_correct_answers["type"]

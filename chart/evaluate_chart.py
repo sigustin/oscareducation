@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# encoding: utf-8
+
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.postgres.fields import JSONField
@@ -19,5 +20,5 @@ def evaluate_chart(question, response):
     if evaluation_type == "chart-barchart":
         #TODO
         return 1
-    else
+    else:
         return 1

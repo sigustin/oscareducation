@@ -34,7 +34,7 @@
           -for answer in question.answers
             %input.hidden{type: "number", value: "", name: "graph-{{ toploop_counter0 }}-{{ answer.graph.type }}-{{ forloop.counter0 }}-X", id: "graph-{{ toploop_counter0 }}-{{ answer.graph.type }}-{{ forloop.counter0 }}-X"}
             %input.hidden{type: "number", value: "", name: "graph-{{ toploop_counter0 }}-{{ answer.graph.type }}-{{ forloop.counter0 }}-Y", id: "graph-{{ toploop_counter0 }}-{{ answer.graph.type }}-{{ forloop.counter0 }}-Y"}
-            
+
       -elif question.type == "chart-barchart"
         -# Group 7
         .jxgbox.chartQuestion#jxgboxPreview{id:barChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-barchart",value:"chart-barchart",data-chart-raw:"{{question.answers}}"}
@@ -52,9 +52,9 @@
               Supprimer la dernière
         -#%p {{ forloop.counter0 }}
         -# -include "professor/exercice/previsualize_graph_exercices.haml"
-        
-        
-     -elif question.type == "chart-piechart"
+
+
+      -elif question.type == "chart-piechart"
        .jxgbox.chartQuestion#jxgboxPreview{id:pieChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart",data-chart-raw:"{{question.answers}}"}
         .form-group{style :"overflow: hidden;"}
           %label.control-label.col-sm-3 Nombre maximum de secteurs
@@ -76,10 +76,10 @@
             %button.btn.btn-danger{onclick: "chart_deleteLastPie()", type: "button", disabled:"disabled"}
               %span.glyphicon.glyphicon-minus
               Supprimer la dernière
-              
-     -elif question.type == "professor"
+
+      -elif question.type == "professor"
         %i A corriger par le professeur
-     -else
+      -else
         =question.type
 
   %input.btn.btn-primary{type: "submit", value: "Répondre", disabled:"disabled"}

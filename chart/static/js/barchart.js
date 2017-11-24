@@ -378,15 +378,24 @@ function chart_update()
 
 function chart_changeScopeQuestions(questions)
 {
-    var counter = 0;
+    var counterBar = 0;
+    var counterPie = 0;
     for(var i = 0;i<questions.length;i++)
     {
         if(questions[i].type == "chart-barchart")
         {
             for(var j = 0;j<questions[i].answers.length;j++)
             {
-                questions[i].answers[j].chart = chart_getJSON(counter);
-                counter++;
+                questions[i].answers[j].chart = chart_getJSONBar(counterBar);
+                counterBar++;
+            }
+        }
+        if(questions[i].type == "chart-piechart")
+        {
+            for(var j = 0;j<questions[i].answers.length;j++)
+            {
+                questions[i].answers[j].chart = chart_getJSONPie(counterPie);
+                counterPie++;
             }
         }
     }
@@ -402,7 +411,7 @@ function chart_deleteLastBar(element)
     chart_update();
 }
 
-function chart_getJSON(index)
+function chart_getJSONBar(index)
 {
     pointValue = [];
     if(bars[index] == undefined)bars[index] = [];

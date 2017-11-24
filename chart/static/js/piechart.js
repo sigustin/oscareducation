@@ -85,3 +85,11 @@ function chart_deleteLastPie(element)
 	this.labels[index].pop()
 	create_pieChart(document.getElementsByClassName("chartQuestionPiechart")[index],index)
 }
+
+function chart_getJSONPie(index)
+{
+    return JSON.stringify({
+        "point":dataArr[index],
+        "labels":labels[index]
+    });
+}

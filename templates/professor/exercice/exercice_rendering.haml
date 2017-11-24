@@ -55,11 +55,6 @@
 
 
       -elif question.type == "chart-piechart"
-       .jxgbox.chartQuestion#jxgboxPreview{id:pieChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart",data-chart-raw:"{{question.answers}}"}
-        .form-group{style :"overflow: hidden;"}
-          %label.control-label.col-sm-3 Nombre maximum de secteurs
-          .col-sm-3
-            %input.form-control{id: "maxSector",type: "number", ng-model: "maxSector", ng-required: "false", disabled:"disabled"}
         .form-group{style :"overflow: hidden;"}
           %label.control-label.col-sm-3 Amplitude du secteur
           .col-sm-3
@@ -76,6 +71,7 @@
             %button.btn.btn-danger{onclick: "chart_deleteLastPie()", type: "button", disabled:"disabled"}
               %span.glyphicon.glyphicon-minus
               Supprimer la dernière
+        .jxgbox.chartQuestion#jxgboxPreview{id:pieChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart",data-chart-raw:"{{question.answers}}"}
 
       -elif question.type == "professor"
         %i A corriger par le professeur

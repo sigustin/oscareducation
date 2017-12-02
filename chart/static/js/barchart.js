@@ -361,7 +361,7 @@ function chart_add(element)
 }
 
 
-function chart_btnUpdate(element)
+function chart_btnUpdateBar(element)
 {
     var index = $(".btn-updateBar").index(element);
     chart_createBarChartFromForm();

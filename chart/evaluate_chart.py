@@ -19,9 +19,9 @@ def standardizedTxt(str):
 
 
 def sameArray(a1, a2):
-    '''
+    """
     :return: True if they are the same, False otherwise
-    '''
+    """
     if len(a1) != len(a2): return False
 
     for (e1,e2) in zip(a1,a2):
@@ -31,11 +31,11 @@ def sameArray(a1, a2):
 
 
 def sameDic(d1,d2):
-    '''
+    """
     :param d1: a dictionary where key are str
     :param d2: a dictionary where key are str
     :return: True if they are the same (the key are normalize for testing), False otherwise
-    '''
+    """
     if len(d1) != len(d2): return False
 
     for (k1,k2) in zip(d1,d2):
@@ -46,11 +46,11 @@ def sameDic(d1,d2):
 
 
 def evaluate_chart(question, response):
-    '''
+    """
     :param question: a Question object
     :param response: The response to assess
     :return: 1 if the response is correct, 0 if incorrect, -1 if automatic evaluation is impossible
-    '''
+    """
     try:
         raw_correct_answers = question.get_answer()
         evaluation_type = raw_correct_answers["type"]

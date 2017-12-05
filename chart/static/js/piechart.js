@@ -48,10 +48,10 @@ function create_pieChart(element,index)//complete is a boolean determining if th
 	for(var i = 0;i<dataArr[index].length;i++)
 	{
 		colorsChart.push(colors[i%colors.length]);
-		labelsChart.push(labels[index][i%labels.length]);
+		labelsChart.push(this.labels[index][i]);
 		sum+=dataArr[index][i];
 	}
-
+	console.log(labelsChart);
 
 	if(sum < 100)
 	{

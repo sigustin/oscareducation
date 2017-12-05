@@ -9,7 +9,7 @@ import unittest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
-from selenium.webdriver.support import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
 from chart.evaluate_chart import evaluate_chart
 from examinations.models import Question
 from django.test import TestCase

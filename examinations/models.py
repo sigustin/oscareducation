@@ -7,11 +7,13 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from chart import *
+from chart.evaluate_chart import evaluate_chart
 import yaml
 import yamlordereddictloader
 import json
 import re
+
+from chart.evaluate_chart import evaluate_chart
 
 
 class Context(models.Model):
@@ -218,7 +220,7 @@ class Question(models.Model):
             # All the correct answers are selected, all the incorrect ones not selected
             return 1
 
-        elif evaluation_type.startwith("chart"):
+        elif evaluation_type.startswith("chart"):
             return evaluate_chart(self, response)
 
         # No automatic verification to perform if corrected by a Professor

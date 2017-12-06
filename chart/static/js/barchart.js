@@ -13,6 +13,7 @@ var maxX = [];
 var maxY = [];
 var points = [[]];
 var precisionValue = [];
+var chart_opacity = 1;
 $( document ).ready(function() {
     chart_refresh();
 });
@@ -29,12 +30,16 @@ function chart_changeInput($scope)
     $scope.zeroY = -1;
     $scope.maxX = 10;
     $scope.maxY = 10;
+
+    $scope.sector = 90;
+    $scope.labelPie = "secteur";
 }
 
 function chart_refresh()
 {
-    graphics = document.getElementsByClassName("chartQuestion");  //find all charts on the page
+    var graphics = document.getElementsByClassName("chartQuestion");  //find all charts on the page
     for(var i = 0;i<graphics.length;i++){
+        console.log("found "+graphics.length+" graphics");
         chart_createChart(graphics[i]);  //create the element founded
     }
     chart_createBarChartFromForm()
@@ -50,7 +55,6 @@ function chart_refresh()
 
             $("#barchart-hiddenInput").val(bar);
 
-            console.log(bar)
         }, 500);
 
     }
@@ -104,7 +108,6 @@ function chart_setOrigin(zX,zY,mX,mY,which)
 function chart_updateForStudent()
 {
     graphics = document.getElementsByClassName("chartQuestionStudent");
-	console.log(graphics)
 	var element;
 	for(var i = 0;i<graphics.length;i++)
 	{
@@ -196,7 +199,7 @@ function chart_updateForStudent()
 
 function chart_createBarChartFromForm()
 {
-	graphics = document.getElementsByClassName("chartQuestionValidation");
+	graphics = document.getElementsByClassName("chartQuestionBarchart");
 	var element;
 	for(var i = 0;i<graphics.length;i++)
     {
@@ -227,7 +230,7 @@ function chart_createBarChartFromForm()
         	chart_setOrigin(zX,zY,mX,mY,i);
 
             element.id = "board"+i;
-            let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,axis:false,showCopyright:false, boundingbox: [this.zeroX[i], this.maxY[i], this.maxX[i], this.zeroY[i]]});
+            let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,fillOpacity:chart_opacity,axis:false,showCopyright:false, boundingbox: [this.zeroX[i], this.maxY[i], this.maxX[i], this.zeroY[i]]});
             this.boardBarChart[i] = board;
         	xaxis = board.create('axis', [[0,0],[1,0]],
         				{name:this.AxisX[i],
@@ -262,8 +265,8 @@ function chart_createBarChartFromForm()
             if(this.bars[i] != undefined)
                 if(this.bars[i].length >0)
                      char = board.create('chart', [this.bars[i]],
-                                {chartStyle:'bar', width:1, labels:this.bars[i],
-                                 colorArray:['#8E1B77','#BE1679','#DC1765','#DA2130','#DB311B','#DF4917','#E36317','#E87F1A','#F1B112','#FCF302','#C1E212'], shadow:false});
+                        {chartStyle:'bar', width:1, labels:this.bars[i],fillOpacity:chart_opacity,
+                         colorArray:['#8E1B77','#BE1679','#DC1765','#DA2130','#DB311B','#DF4917','#E36317','#E87F1A','#F1B112','#FCF302','#C1E212'], shadow:false});
 
         }
 	}
@@ -281,24 +284,6 @@ function chart_createChart(element)
     var rawData3 = $(element).data( "chart-raw3" );
     var dataArr = $(element).data("chart-percent");
     var board;
-    if(type.includes("piechart"))
-    {
-        board = JXG.JSXGraph.initBoard(element.id, {showNavigation:false, showCopyright:false, boundingbox: [-5, 5, 5, -5]});
-        board.containerObj.style.backgroundColor = 'white';
-        board.options.label.strokeColor = 'black';
-        board.suspendUpdate();
-        let a = board.create('chart', dataArr,
-            {chartStyle:'pie',
-             colors:['#0F408D','#6F1B75','#CA147A','#DA2228','#E8801B','#FCF302','#8DC922','#15993C','#87CCEE','#0092CE'],
-             fillOpacity:0.8, center:[0,0], strokeColor:'black', highlightStrokeColor:'black', strokeWidth:1,
-             labels:$(element).data("chart-label"),
-             highlightColors:['#E46F6A','#F9DF82','#F7FA7B','#B0D990','#69BF8E','#BDDDE4','#92C2DF','#637CB0','#AB91BC','#EB8EBF'],
-             highlightOnSector:true,
-             highlightBySize:true
-            }
-        );
-        board.unsuspendUpdate();
-    }
     if(type.includes("chart-barchart"))
     {
         var box = [-1, 5, 5, -1];
@@ -319,7 +304,7 @@ function chart_createChart(element)
         if(rawData != undefined)
         {
             var test =String(rawData);
-            for(var temp = 0;temp<100;temp++) // I don't know why, but we must pass the regex as much as there answers
+            for(var temp = 0;temp<100;temp++) // I don't know why, but we must pass the regex as much as there is answers. I hope there won't be more than 100
                 test = test.replace(/u'(?=[^:]+')/g, "'").replace(/'/g, '"').replace('u"', '"').replace("False", 'false').replace("True", 'true').replace('"{', '{').replace('}"', '}').replace('u"', '"')
 
 
@@ -345,7 +330,7 @@ function chart_createChart(element)
         }
 
         let chart;
-        if(this.bars[0] != undefined)
+        if(this.bars[0] != undefined && rawData == undefined)
             if(this.bars[0].length >0)
                  char = board.create('chart', [this.bars[0]],
                             {chartStyle:'bar', width:1, labels:this.bars[0],
@@ -393,16 +378,24 @@ function chart_update()
 
 function chart_changeScopeQuestions(questions)
 {
-    var counter = 0;
+    var counterBar = 0;
+    var counterPie = 0;
     for(var i = 0;i<questions.length;i++)
     {
         if(questions[i].type == "chart-barchart")
         {
-
             for(var j = 0;j<questions[i].answers.length;j++)
             {
-                questions[i].answers[j].chart = chart_getJSON(counter);
-                counter++;
+                questions[i].answers[j].chart = chart_getJSONBar(counterBar);
+                counterBar++;
+            }
+        }
+        if(questions[i].type == "chart-piechart")
+        {
+            for(var j = 0;j<questions[i].answers.length;j++)
+            {
+                questions[i].answers[j].chart = chart_getJSONPie(counterPie);
+                counterPie++;
             }
         }
     }
@@ -410,7 +403,7 @@ function chart_changeScopeQuestions(questions)
 }
 
 
-function chart_deleteLast(element)
+function chart_deleteLastBar(element)
 {
     var index = $(".btn-deleteBar").index(element);
     chart_removeBar(index);
@@ -418,7 +411,7 @@ function chart_deleteLast(element)
     chart_update();
 }
 
-function chart_getJSON(index)
+function chart_getJSONBar(index)
 {
     pointValue = [];
     if(bars[index] == undefined)bars[index] = [];

@@ -297,14 +297,19 @@ function chart_deleteLastFrequency(element)
 
 function chart_getJSONFrequency(index)
 {
-    pointValue = [];
+    pointValueX = [];
+    pointValueY = [];
     if(this.points[index] == undefined)this.points[index] = [];
     for(var i = 0;i<this.points[index].length;i++)
     {
-        pointValue.push(this.points[index][i]());
+        pointValueX.push(this.points[index][i].X());
+        pointValueY.push(this.points[index][i].Y());
     }
-    return JSON.stringify({
-        "point":pointValue,
+
+    console.log("asked jsson frequency")
+    var t =  JSON.stringify({
+        "pointX":pointValueX,
+        "pointY":pointValueY,
         "AxisX":AxisX[index],
         "AxisY":AxisY[index],
         "zeroX":zeroX[index],
@@ -312,6 +317,8 @@ function chart_getJSONFrequency(index)
         "maxX":maxX[index],
         "maxY":maxY[index]
     });
+    console.log(t);
+    return t;
 }
 
 

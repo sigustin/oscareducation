@@ -403,7 +403,7 @@ function chart_changeScopeQuestions(questions)
         {
             for(var j = 0;j<questions[i].answers.length;j++)
             {
-                questions[i].answers[j].chart = chart_getJSONPie(counterFrequency);
+                questions[i].answers[j].chart = chart_getJSONFrequency(counterFrequency);
                 counterFrequency++;
             }
         }

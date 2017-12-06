@@ -19,9 +19,9 @@ def standardizedTxt(str):
 
 
 def sameArray(a1, a2):
-    """
+    '''
     :return: True if they are the same, False otherwise
-    """
+    '''
     if len(a1) != len(a2): return False
 
     for (e1,e2) in zip(a1,a2):
@@ -30,37 +30,39 @@ def sameArray(a1, a2):
     return True
 
 
-def sameDic(d1,d2):
-    """
-    :param d1: a dictionary where key are str
-    :param d2: a dictionary where key are str
-    :return: True if they are the same (the key are normalize for testing), False otherwise
-    """
-    if len(d1) != len(d2): return False
+def sameTupleArray(a1, a2):
+    '''
+    :return: True if they are the same, False otherwise
+    '''
+    if len(a1) != len(a2): return False
 
-    for (k1,k2) in zip(d1,d2):
-        if standardizedTxt(k1) != standardizedTxt(k2):
+    for (e1,e2) in zip(a1,a2):
+        if e1[0] != e2[0]:
             return False
-        if d1[k1] != d2[k2]:
+        elif e1[1] != e2[1]:
             return False
+    return True
 
 
 def evaluate_chart(question, response):
-    """
+    '''
     :param question: a Question object
     :param response: The response to assess
     :return: 1 if the response is correct, 0 if incorrect, -1 if automatic evaluation is impossible
-    """
+    '''
     try:
         raw_correct_answers = question.get_answer()
         evaluation_type = raw_correct_answers["type"]
         list_raw_correct_answers = raw_correct_answers['answers']
-        #answer_json = json.loads(raw_correct_answers['answers'][0]['chart'])
-
+        # raise Exception('response len =' + str(len(response)) + '  ' + str(response))
         if evaluation_type == "chart-barchart":
             student_answers = []
             for x in response[0].decode('utf-8').split(','):
-                student_answers.append(int(x))
+                try:
+                    student_answers.append(int(x))
+                except ValueError:
+                    pass
+                    # print('Value error, student has send nothing or has send non int parameters')
             # raise Exception('response len ='+str(len(response))+'  '+str(response))
             for answer_str in list_raw_correct_answers:
                 answer_json = json.loads(str(answer_str['chart']))
@@ -68,20 +70,34 @@ def evaluate_chart(question, response):
                 if sameArray(correct_answer, student_answers):
                     return 1
             return 0
-        # elif evaluation_type == "chart-piechart":
-        #     #Assuming answer are in a dic key are sectorname and value are sector size
-        #     student_answers = {}
-        #
-        #     student_answers = sorted(student_answers.items(), key=lambda x: (x[1],x[0]),reverse=True)
-        #     for answer_str in list_raw_correct_answers:
-        #         answer_json = json.load(answer_str)
-        #         correct_answer = sorted(answer_json['point'].items(), key=lambda x: (x[1],x[0]),reverse=True)
-        #
-        #         raise Exception('Need more information')
-        #         if sameDic(correct_answer, student_answers):
-        #             return 1
-        #     return 0
+        elif evaluation_type == "chart-piechart":
+            #Assuming answer are in a dic key are sectorname and value are sector size
+            student_answers = []
+            for x in response[0].decode('utf-8').split(','):
+                try:
+                    student_answers.append( (standardizedTxt(x[:x.rfind(":")]),int(x[x.rfind(':')+1:])) )
+                except ValueError:
+                    pass
+            student_answers = sorted(student_answers,reverse=True)
+            for answer_str in list_raw_correct_answers:
+                try:
+                    answer_json = json.loads(str(answer_str['chart']))
+                except Exception as e:
+                    print(e)
+                outarray = answer_json['point']
+                correct_answer = []
+                for x in outarray.decode('utf-8')[1:-1].split(','):#response[0].decode('utf-8').split(','):
+                    try:
+                        correct_answer.append((standardizedTxt(x[:x.rfind(":")]), int(x[x.rfind(':') + 1:])))
+                    except ValueError:
+                        pass
+                correct_answer = sorted(correct_answer,reverse=True)
+
+                # raise Exception('Need more information')
+                if sameTupleArray(correct_answer, student_answers):
+                    return 1
+            return 0
         else:
             return -1
-    except ValueError:
+    except ValueError as e:
         return -1

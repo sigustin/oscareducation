@@ -28,8 +28,8 @@ function chart_changeInput($scope)
     $scope.zeroY = -1;
     $scope.maxX = 10;
     $scope.maxY = 10;
-    
-    
+
+
     $scope.frequencyGraphX = "abscisses";
     $scope.frequencyGraphY = "ordonnees";
     $scope.frequencyMaxX = 10;
@@ -259,7 +259,7 @@ function chart_addFrequency(element)
 	else{
 		var p = this.boardFrequencyChart[index].create('point',[newFrequencyX,newFrequencyY],{name:'',size:3,face:'[]'});
 		p.setProperty({fixed:true})
-		chart_addPoint(p,index);  		
+		chart_addPoint(p,index);
 		if(this.points[index].length>1){
 			var l = this.boardFrequencyChart[index].create('line',[[this.points[index][this.points[index].length-1].X(),this.points[index][this.points[index].length-1].Y()],[newFrequencyX,newFrequencyY]],{straightFirst:false,straightLast:false,strokeWidth:2});
 			l.setProperty({fixed:true})
@@ -286,41 +286,6 @@ function chart_update()
 }
 
 
-function chart_changeScopeQuestions(questions)
-{
-    var counterBar = 0;
-    var counterPie = 0;
-    var counterFrequency = 0;
-    for(var i = 0;i<questions.length;i++)
-    {
-        if(questions[i].type == "chart-barchart")
-        {
-            for(var j = 0;j<questions[i].answers.length;j++)
-            {
-                questions[i].answers[j].chart = chart_getJSONBar(counterBar);
-                counterBar++;
-            }
-        }
-        if(questions[i].type == "chart-piechart")
-        {
-            for(var j = 0;j<questions[i].answers.length;j++)
-            {
-                questions[i].answers[j].chart = chart_getJSONPie(counterPie);
-                counterPie++;
-            }
-        }
-        
-        if(questions[i].type == "chart-frequencychart")
-        {
-            for(var j = 0;j<questions[i].answers.length;j++)
-            {
-                questions[i].answers[j].chart = chart_getJSONPie(counterFrequency);
-                counterFrequency++;
-            }
-        }
-    }
-    return questions;
-}
 
 
 function chart_deleteLastFrequency(element)

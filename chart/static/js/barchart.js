@@ -380,6 +380,7 @@ function chart_changeScopeQuestions(questions)
 {
     var counterBar = 0;
     var counterPie = 0;
+    var counterFrequency = 0;
     for(var i = 0;i<questions.length;i++)
     {
         if(questions[i].type == "chart-barchart")
@@ -396,6 +397,14 @@ function chart_changeScopeQuestions(questions)
             {
                 questions[i].answers[j].chart = chart_getJSONPie(counterPie);
                 counterPie++;
+            }
+        }
+        if(questions[i].type == "chart-frequencychart")
+        {
+            for(var j = 0;j<questions[i].answers.length;j++)
+            {
+                questions[i].answers[j].chart = chart_getJSONPie(counterFrequency);
+                counterFrequency++;
             }
         }
     }

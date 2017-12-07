@@ -120,8 +120,8 @@ function chart_updateForStudent()
         precisionValue[i] = 1;
         element.id = "board"+i;
         var r = {};
-        r.AxisX = " nope";
-        r.AxisY = " Nope";
+        r.barAxisX = " nope";
+        r.barAxisY = " Nope";
         var box = [-1, 5, 5, -1];
 
 
@@ -149,13 +149,13 @@ function chart_updateForStudent()
             r = parsed[0];
             if(rawData2 != null)r = parsed;
             if(rawData3 != null)r = parsed;
-            box = [r.zeroX, r.maxY,r.maxX,r.zeroY];
+            box = [r.barZeroX, r.barMaxY,r.barMaxX,r.barZeroY];
         }
 
         let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,axis:false,showCopyright:false, boundingbox:box});
         this.boardBarChart[i] = board;
         xaxis = board.create('axis', [[0,0],[1,0]],
-                    {name:r.AxisX,
+                    {name:r.barAxisX,
                     withLabel:true,
                     label: {
                         position:'rt',
@@ -163,7 +163,7 @@ function chart_updateForStudent()
                         }
                     });
         yaxis = board.create('axis', [[0,0],[0,1]],
-                    {name:AxisY,
+                    {name:r.barAxisY,
                     withLabel:true,
                     label: {
                         position:'rt',
@@ -312,7 +312,7 @@ function chart_createChart(element)
             let r = parsed[0];
             if(rawData2 != null)r = parsed;
             if(rawData3 != null)r = parsed;
-            box = [r.zeroX, r.maxY,r.maxX,r.zeroY];
+            box = [r.barZeroX, r.barMaxY,r.barMaxX,r.barZeroY];
         }
 
         let board = JXG.JSXGraph.initBoard(element.id, { axis:true,showCopyright:false, boundingbox: box,showNavigation : false});
@@ -426,7 +426,7 @@ function chart_getJSONBar(index)
     if(bars[index] == undefined)bars[index] = [];
     for(var i = 0;i<bars[index].length;i++)
     {
-        pointValue.push(bars[index][i]());
+        pointValue.push(this.bars[index][i]());
     }
     return JSON.stringify({
         "point":pointValue,

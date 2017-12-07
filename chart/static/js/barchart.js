@@ -58,7 +58,7 @@ function chart_refresh()
         }, 500);
 
     }
-
+    chart_update_freq();
 }
 
 function chart_setBars()

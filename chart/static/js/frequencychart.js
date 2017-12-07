@@ -279,7 +279,7 @@ function chart_btnUpdateFrequency(element)
     chart_createFrequencyChartFromForm();
 
 }
-function chart_update()
+function chart_update_freq()
 {
     chart_createFrequencyChartFromForm();
     chart_updateForStudent();

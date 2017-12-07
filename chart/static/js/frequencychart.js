@@ -13,7 +13,7 @@ var zeroX = -1;
 var zeroY = -1;
 var chart_opacity = 1;
 $( document ).ready(function() {
-    chart_refresh();
+    chart_refreshFrequency();
 });
 
 function chart_changeInput($scope)
@@ -39,7 +39,7 @@ function chart_changeInput($scope)
     $scope.labelPie = "secteur";
 }
 
-function chart_refresh()
+function chart_refreshFrequency()
 {
     var graphics = document.getElementsByClassName("chartQuestion");  //find all charts on the page
     for(var i = 0;i<graphics.length;i++){
@@ -51,28 +51,28 @@ function chart_refresh()
 
 }
 
-function chart_setPoints()
+function chart_setFrequencyPoints()
 {
 	this.points = [[]];
 }
 
-function chart_addPoint(point,which)
+function chart_addFrequencyPoint(point,which)
 {
 	this.points[which].push(point);
 }
 
-function chart_removePoint(which)
+function chart_removeFrequencyPoint(which)
 {
 	this.points[which].pop();
 }
 
-function chart_setAxis(AxisX,AxisY,which)
+function chart_setFrequencyAxis(AxisX,AxisY,which)
 {
 	this.AxisX[which] = AxisX;
 	this.AxisY[which] = AxisY;
 }
 
-function chart_setOrigin(zX,zY,mX,mY,which)
+function chart_setFrequencyOrigin(zX,zY,mX,mY,which)
 {
 	this.zeroX[which] = zX;
 	this.zeroY[which]= zY;
@@ -81,7 +81,7 @@ function chart_setOrigin(zX,zY,mX,mY,which)
 }
 
 
-function chart_updateForStudent()
+function chart_updateFrequencyForStudent()
 {
     graphics = document.getElementsByClassName("chartQuestionStudent");
 	var element;
@@ -190,10 +190,10 @@ function chart_createFrequencyChartFromForm()
 
         	if(this.points == undefined)
         	{
-        		chart_setPoints(i);
+        		chart_setFrequencyPoints(i);
         	}
-        	chart_setAxis(frequencyGraphX,frequencyGraphY,i);
-        	chart_setOrigin(0,0,mX,mY,i);
+        	chart_setFrequencyAxis(frequencyGraphX,frequencyGraphY,i);
+        	chart_setFrequencyOrigin(0,0,mX,mY,i);
 
             element.id = "board"+i;
             let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-frequencyChartFromForm-"+i,fillOpacity:chart_opacity,axis:false,showCopyright:false, boundingbox: [-1, this.maxY[i], this.maxX[i], -1]});
@@ -259,7 +259,7 @@ function chart_addFrequency(element)
 	else{
 		var p = this.boardFrequencyChart[index].create('point',[newFrequencyX,newFrequencyY],{name:'',size:3,face:'[]'});
 		p.setProperty({fixed:true})
-		chart_addPoint(p,index);
+		chart_addFrequencyPoint(p,index);
 		if(this.points[index].length>1){
 			var l = this.boardFrequencyChart[index].create('line',[[this.points[index][this.points[index].length-1].X(),this.points[index][this.points[index].length-1].Y()],[newFrequencyX,newFrequencyY]],{straightFirst:false,straightLast:false,strokeWidth:2});
 			l.setProperty({fixed:true})
@@ -268,7 +268,7 @@ function chart_addFrequency(element)
 			var l = this.boardFrequencyChart[index].create('line',[[0,0],[newFrequencyX,newFrequencyY]],{straightFirst:false,straightLast:false,strokeWidth:2});
 			l.setProperty({fixed:true})
 		}
-   		chart_update();
+   		chart_update_freq();
    	}
 }
 
@@ -282,7 +282,7 @@ function chart_btnUpdateFrequency(element)
 function chart_update_freq()
 {
     chart_createFrequencyChartFromForm();
-    chart_updateForStudent();
+    chart_updateFrequencyForStudent();
 }
 
 
@@ -291,8 +291,8 @@ function chart_update_freq()
 function chart_deleteLastFrequency(element)
 {
     var index = $(".btn-deleteFrequency").index(element);
-    chart_removePoint(index);
-    chart_update();
+    chart_removeFrequencyPoint(index);
+    chart_update_freq();
 }
 
 function chart_getJSONFrequency(index)

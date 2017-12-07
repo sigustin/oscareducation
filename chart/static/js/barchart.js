@@ -4,14 +4,14 @@
 */
 
 var bars = [[]];
-var AxisX = [];
-var AxisY = [];
+var barAxisX = [];
+var barAxisY = [];
 var boardBarChart = [];
-var zeroX = [];
-var zeroY = [];
-var maxX = [];
-var maxY = [];
-var points = [[]];
+var barZeroX = [];
+var barZeroY = [];
+var barMaxX = [];
+var barMaxY = [];
+var barPoints = [[]];
 var precisionValue = [];
 var chart_opacity = 1;
 $( document ).ready(function() {
@@ -49,8 +49,8 @@ function chart_refresh()
         //update the hidden field every 1/2 second. It works.
         setInterval(function(){
             var bar = [];
-            for(var i = 0;i<points[0].length;i++){
-                bar.push(chart_getPointValue(points[0],i)());
+            for(var i = 0;i<this.barPoints[0].length;i++){
+                bar.push(chart_getPointValue(this.barPoints[0],i)());
             }
 
             $("#barchart-hiddenInput").val(bar);
@@ -66,9 +66,9 @@ function chart_setBars()
 	this.bars = [[]];
 }
 
-function chart_setPoints()
+function chart_setBarPoints()
 {
-	this.points = [[]];
+	this.barPoints = [[]];
 }
 
 function chart_addBar(bar,which)
@@ -78,7 +78,7 @@ function chart_addBar(bar,which)
 
 function chart_addPoint(point,which)
 {
-	this.points[which].push(point);
+	this.barPoints[which].push(point);
 }
 function chart_removeBar(which)
 {
@@ -87,21 +87,21 @@ function chart_removeBar(which)
 
 function chart_removePoint(which)
 {
-	this.points[which].pop();
+	this.barPoints[which].pop();
 }
 
-function chart_setAxis(AxisX,AxisY,which)
+function chart_setBarAxis(barAxisX,barAxisY,which)
 {
-	this.AxisX[which] = AxisX;
-	this.AxisY[which] = AxisY;
+	this.barAxisX[which] = barAxisX;
+	this.barAxisY[which] = barAxisY;
 }
 
 function chart_setOrigin(zX,zY,mX,mY,which)
 {
-	this.zeroX[which] = zX;
-	this.zeroY[which]= zY;
-	this.maxX[which]= mX;
-	this.maxY[which] = mY;
+	this.barZeroX[which] = zX;
+	this.barZeroY[which]= zY;
+	this.barMaxX[which]= mX;
+	this.barMaxY[which] = mY;
 }
 
 
@@ -171,18 +171,18 @@ function chart_updateForStudent()
                         }
                     });
         var temp =[];
-        if(this.points[i] == undefined) this.points[i] = [];
+        if(this.barPoints[i] == undefined) this.barPoints[i] = [];
         if(this.bars[i] == undefined) this.bars[i] = [];
-        for(var j = 0;j<this.points[i].length;j++)
+        for(var j = 0;j<this.barPoints[i].length;j++)
         {
-            let p = this.boardBarChart[i].create('point',[j+1,this.points[i][j].Y()],{name:'',size:7,face:'^'});
+            let p = this.boardBarChart[i].create('point',[j+1,this.barPoints[i][j].Y()],{name:'',size:7,face:'^'});
             temp.push(p);
         }
-        this.points[i] = temp;
+        this.barPoints[i] = temp;
         this.bars[i] = []
-        for(var j = 0;j<this.points[i].length;j++)
+        for(var j = 0;j<this.barPoints[i].length;j++)
         {
-            this.bars[i].push(chart_getPointValue(this.points[i],j));
+            this.bars[i].push(chart_getPointValue(this.barPoints[i],j));
         }
         let chart;
         if(this.bars[i] != undefined)
@@ -221,19 +221,19 @@ function chart_createBarChartFromForm()
             var mY = parseInt($(".maxY").eq(i).val());
             element = graphics[i];
 
-        	if(this.points == undefined && this.bars == undefined)
+        	if(this.barPoints == undefined && this.bars == undefined)
         	{
-        		chart_setPoints(i);
+        		chart_setBarPoints(i);
         	}
         	chart_setBars(i);
-        	chart_setAxis(barGraphX,barGraphY,i);
+        	chart_setBarAxis(barGraphX,barGraphY,i);
         	chart_setOrigin(zX,zY,mX,mY,i);
 
             element.id = "board"+i;
-            let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,fillOpacity:chart_opacity,axis:false,showCopyright:false, boundingbox: [this.zeroX[i], this.maxY[i], this.maxX[i], this.zeroY[i]]});
+            let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,fillOpacity:chart_opacity,axis:false,showCopyright:false, boundingbox: [this.barZeroX[i], this.barMaxY[i], this.barMaxX[i], this.barZeroY[i]]});
             this.boardBarChart[i] = board;
         	xaxis = board.create('axis', [[0,0],[1,0]],
-        				{name:this.AxisX[i],
+        				{name:this.barAxisX[i],
         				withLabel:true,
         				label: {
         					position:'rt',
@@ -241,7 +241,7 @@ function chart_createBarChartFromForm()
         					}
         				});
         	yaxis = board.create('axis', [[0,0],[0,1]],
-        				{name:this.AxisY[i],
+        				{name:this.barAxisY[i],
         				withLabel:true,
         				label: {
         					position:'rt',
@@ -249,17 +249,17 @@ function chart_createBarChartFromForm()
         					}
         				});
         	var temp =[];
-            if(this.points[i] == undefined) this.points[i] = [];
+            if(this.barPoints[i] == undefined) this.barPoints[i] = [];
             if(this.bars[i] == undefined) this.bars[i] = [];
-        	for(var j = 0;j<this.points[i].length;j++)
+        	for(var j = 0;j<this.barPoints[i].length;j++)
         	{
-        		let p = this.boardBarChart[i].create('point',[j+1,this.points[i][j].Y()],{name:'',size:7,face:'^'});
+        		let p = this.boardBarChart[i].create('point',[j+1,this.barPoints[i][j].Y()],{name:'',size:7,face:'^'});
         		temp.push(p);
         	}
-        	this.points[i] = temp;
-        	for(var j = 0;j<this.points[i].length;j++)
+        	this.barPoints[i] = temp;
+        	for(var j = 0;j<this.barPoints[i].length;j++)
         	{
-                this.bars[i].push(chart_getPointValue(this.points[i],j));
+                this.bars[i].push(chart_getPointValue(this.barPoints[i],j));
             }
             let chart;
             if(this.bars[i] != undefined)
@@ -430,12 +430,12 @@ function chart_getJSONBar(index)
     }
     return JSON.stringify({
         "point":pointValue,
-        "AxisX":AxisX[index],
-        "AxisY":AxisY[index],
-        "zeroX":zeroX[index],
-        "zeroY":zeroY[index],
-        "maxX":maxX[index],
-        "maxY":maxY[index],
+        "barAxisX":barAxisX[index],
+        "barAxisY":barAxisY[index],
+        "barZeroX":barZeroX[index],
+        "barZeroY":barZeroY[index],
+        "barMaxX":barMaxX[index],
+        "barMaxY":barMaxY[index],
         "precisionValue":precisionValue[index]
     });
 }

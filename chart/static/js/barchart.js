@@ -127,11 +127,11 @@ function chart_updateForStudent()
 
         if(rawData2 != null)
         {
-            rawData = chart_parse_orderedDict(rawData2);
+            rawData = chart_parse_orderedDictBar(rawData2);
         }
         if( rawData3 != null)
         {
-            rawData = chart_parse_orderedDict(rawData3);
+            rawData = chart_parse_orderedDictBar(rawData3);
         }
         /*
             if there is data given from the server, we must parse it.
@@ -143,8 +143,6 @@ function chart_updateForStudent()
             var test =String(rawData);
             for(var temp = 0;temp<100;temp++) // I don't know why, but we must pass the regex as much as there answers
                 test = test.replace(/u'(?=[^:]+')/g, "'").replace(/'/g, '"').replace('u"', '"').replace("False", 'false').replace("True", 'true').replace('"{', '{').replace('}"', '}').replace('u"', '"')
-
-
             var parsed =  JSON.parse(test);
             r = parsed[0];
             if(rawData2 != null)r = parsed;
@@ -290,11 +288,11 @@ function chart_createChart(element)
 
         if(rawData2 != null)
         {
-            rawData = chart_parse_orderedDict(rawData2);
+            rawData = chart_parse_orderedDictBar(rawData2);
         }
         if( rawData3 != null)
         {
-            rawData = chart_parse_orderedDict(rawData3);
+            rawData = chart_parse_orderedDictBar(rawData3);
         }
         /*
             if there is data given from the server, we must parse it.
@@ -448,7 +446,7 @@ function chart_roundToStep(number,step)
     return lowest;
 }
 
-function chart_parse_orderedDict(orderedDictStr)
+function chart_parse_orderedDictBar(orderedDictStr)
 {
     return orderedDictStr.substring(orderedDictStr.indexOf("chart")+9,orderedDictStr.lastIndexOf('}')+1);
 }

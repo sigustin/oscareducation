@@ -58,6 +58,23 @@
                   %button.btn.btn-danger.btn-deleteBar{onclick: "chart_deleteLastBar($(this))", type: "button"}
                     %span.glyphicon.glyphicon-minus
                     Supprimer la dernière
+          -elif answer.type == "chart-piechart"
+            %script{type: "text/javascript", src: "/static/js/piechart.js"}
+            -with name=forloop.counter0
+              -# Group 7
+              .jxgbox.chartQuestion.chartQuestionStudent#jxgboxPreview{id:pieChartForm,style:"width:634px; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart",data-chart-raw3:"{{answer.answers}}"}
+              .form-group
+                %label.control-label.col-sm-3 Ajouter un nouveau secteur (en degrée)
+                .col-sm-3
+                  %input.form-control{id: "sector",class: "sector",type: "number", ng-model: "sector", ng-required: "false"}
+                .col-sm-3
+                  %button.btn.btn-success.btn-addPie{onclick: "chart_createPieChartFromForm()", type: "button"}
+                    %span.glyphicon.glyphicon-plus
+                    Ajouter
+                .col-sm-3
+                  %button.btn.btn-danger.btn-deletePie{onclick: "chart_deleteLastPie($(this))", type: "button"}
+                    %span.glyphicon.glyphicon-minus
+                    Supprimer le dernier
           -elif answer.type == "professor"
             %input.form-control{id: "{{ forloop.counter0 }}", name: "{{ forloop.counter0 }}", type: "text", autocomplete: "off"}
             -#%textarea.form-control{id: "{{ forloop.counter0 }}", name: "{{ forloop.counter0 }}", rows: "5"}

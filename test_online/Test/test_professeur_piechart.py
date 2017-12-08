@@ -21,7 +21,7 @@ class BlogDriver(unittest.TestCase):
         driver = self.driver
         self.assertTrue(driver.current_url.endswith("/accounts/usernamelogin/"))
 		
-		#the teacher loggin with is username and the password associate
+		#the teacher log in with is username and the password associate
         driver.find_element_by_id("id_username").send_keys("prof")
         driver.find_element_by_xpath("//input[@type='submit']").click()
         driver.find_element_by_id("id_password").send_keys("prof")
@@ -71,7 +71,7 @@ class BlogDriver(unittest.TestCase):
         self.assertTrue(driver.current_url.endswith("/test/online/add/"))
         
         #here the teacher give the name of his test 
-        driver.find_element_by_id("test_name").send_keys("pe")
+        driver.find_element_by_id("test_name").send_keys("pietest_new")
         driver.find_element_by_id("addSkillToTestButtonForStage9").click()
         time.sleep(3)
         
@@ -82,11 +82,12 @@ class BlogDriver(unittest.TestCase):
         	i += 1
         	
         time.sleep(5)
-        self.assertTrue(driver.current_url.endswith("/modify/"))
+        
         
         i = 0
         url = driver.current_url
         while(i < 1000 and url == driver.current_url):
+        	self.assertTrue(driver.current_url.endswith("/modify/"))
         	driver.find_element_by_link_text("nouveau").click()
         	i += 1
         	
@@ -101,17 +102,17 @@ class BlogDriver(unittest.TestCase):
         driver.find_element_by_xpath(" *//input[@ng-model = 'question.instructions']").send_keys("sggdgs")
         driver.find_element_by_xpath(" *//input[@ng-model = 'answer.text']").send_keys("3")
         secteur = driver.find_element_by_id("sector")
-        secteur.clear()
         ajouter = driver.find_element_by_css_selector('[onclick="chart_createPieChartFromForm()"]')
-        ajouter.click()
-        secteur.send_keys("90")
         nomScteur = driver.find_element_by_id("labelPie")
+        
+        secteur.clear()
+        secteur.send_keys("90")
         nomScteur.clear()
         nomScteur.send_keys("rouge")
-        ajouter.click()
-        nomScteur.send_keys("r")
-        ajouter.click()
         time.sleep(5)
+        ajouter.click()
+        time.sleep(10)
+        
         secteur.clear()
         secteur.send_keys("180")
         nomScteur.clear()
@@ -119,11 +120,16 @@ class BlogDriver(unittest.TestCase):
         time.sleep(5)
         ajouter.click()
         time.sleep(5)
+        
         #if we had a pie and the sum is greather than 360 and exception will be raise
         secteur.clear()
         secteur.send_keys("45")
+        nomScteur.clear()
+        nomScteur.send_keys("vert")
+        time.sleep(5)
         ajouter.click()
-        time.sleep(10)
+        time.sleep(5)
+        
         driver.find_element_by_css_selector('[onclick ="chart_deleteLastPie($(this))"]').click()
         #driver.find_element_by_css_selector('[onclick ="chart_deleteLastPie($(this))"]').click()
         time.sleep(10)
@@ -136,7 +142,7 @@ class BlogDriver(unittest.TestCase):
         	driver.find_element_by_id("submit-pull-request").click()
         	i += 1
         
-        time.sleep(5)
+        time.sleep(10)
         self.assertTrue("/modify/#" in driver.current_url)
         
         i = 0
@@ -156,6 +162,7 @@ class BlogDriver(unittest.TestCase):
 			
 		time.sleep(5)
 		self.assertTrue(driver.current_url.endswith("/test/"))
+
 	def is_element_present(self, how, what):
 		try:
 			self.driver.find_element(by=how, value=what)

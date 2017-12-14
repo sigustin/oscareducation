@@ -40,7 +40,7 @@ function chart_refresh()
     var graphics = document.getElementsByClassName("chartQuestion");  //find all charts on the page
     for(var i = 0;i<graphics.length;i++){
         console.log("found "+graphics.length+" graphics");
-        chart_createChart(graphics[i]);  //create the element founded
+        chart_createBarChart(graphics[i]);  //create the element founded
     }
     chart_createBarChartFromForm()
 
@@ -58,7 +58,7 @@ function chart_refresh()
         }, 500);
 
     }
-    chart_update_freq();
+    chart_update();
 }
 
 function chart_setBars()
@@ -133,6 +133,8 @@ function chart_updateForStudent()
         {
             rawData = chart_parse_orderedDictBar(rawData3);
         }
+        alert("raw")
+        alert(rawData3)
         /*
             if there is data given from the server, we must parse it.
             We all write bad code, but if it works, it works.
@@ -273,7 +275,7 @@ function chart_createBarChartFromForm()
 
 }
 
-function chart_createChart(element)
+function chart_createBarChart(element)
 {
     var type = $(element).data( "chart-type" );
 
@@ -351,6 +353,7 @@ function chart_getPointValue(points,index)
 function chart_add(element)
 {
     var index = $(".btn-addBar").index(element);
+    alert(index)
 	var newBarY = parseInt($(".newBarY").eq(index).val());
 	var p = this.boardBarChart[index].create('point',[this.bars[index].length+1,newBarY],{name:'',size:7,face:'^'});
 	chart_addBar(newBarY,index);
@@ -369,7 +372,6 @@ function chart_update()
 {
     chart_createBarChartFromForm();
     chart_updateForStudent();
-
 }
 
 

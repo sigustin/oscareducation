@@ -23,3 +23,13 @@ def evaluate_chart(question, response):
         return 1
     else:
         return 1
+    if evaluation_type == "chart-piechart":
+        #TODO
+        return 1
+    else:
+        return 1
+    if evaluation_type == "chart-frequencychart":
+        #TODO
+        return 1
+    else:
+        return 1

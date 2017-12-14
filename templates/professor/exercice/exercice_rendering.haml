@@ -80,16 +80,13 @@
           %label.control-label.col-sm-3 Abscisse du nouveau point
           .col-sm-3
             %input.form-control{id: "pX",type: "number", ng-model: "pX", ng-required: "false", disabled:"disabled"}
-          %label.control-label.col-sm-3 Nom du secteur
-          .col-sm-3
-            %input.form-control{id: "labelPie",type: "text", ng-model: "labelPie", ng-required: "false", disabled:"disabled"}
         .form-group{style :"overflow: hidden;"}
           .col-sm-2
             %button.btn.btn-success{onclick: "chart_addFrequency()", type: "button", disabled:"disabled"}
               %span.glyphicon.glyphicon-plus
               Ajouter
           .col-sm-4
-            %button.btn.btn-danger{onclick: "chart_deleteLastPie()", type: "button", disabled:"disabled"}
+            %button.btn.btn-danger{onclick: "chart_deleteLastFrequency()", type: "button", disabled:"disabled"}
               %span.glyphicon.glyphicon-minus
               Supprimer la dernière
         .jxgbox.chartQuestion#jxgboxPreview{id:pieChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart",data-chart-raw:"{{question.answers}}"}

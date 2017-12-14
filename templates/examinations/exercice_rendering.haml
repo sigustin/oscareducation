@@ -75,6 +75,27 @@
                   %button.btn.btn-danger.btn-deletePie{onclick: "chart_deleteLastPie($(this))", type: "button"}
                     %span.glyphicon.glyphicon-minus
                     Supprimer le dernier
+          -elif answer.type == "chart-frequencychart"
+            %script{type: "text/javascript", src: "/static/js/frequencychart.js"}
+            -with name=forloop.counter0
+              -# Group 7
+              .jxgbox.chartQuestion.chartQuestionStudent#jxgboxPreview{id:frequencyChartForm,style:"width:634px; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-frequencychart",value:"chart-frequencychart",data-chart-raw3:"{{answer.answers}}"}
+              .form-group
+                %label.control-label.col-sm-3 Ordonnée du nouveau point
+                .col-sm-3
+                  %input.form-control{id: "newFrequencyY",class: "newFrequencyY",type: "number", ng-model: "newFrequencyY", ng-required: "false"}
+                %label.control-label.col-sm-3 Abscisse du nouveau point
+                .col-sm-3
+                  %input.form-control{id: "newFrequencyX",class: "newFrequencyX",type: "number", ng-model: "newFrequencyX", ng-required: "false"}
+              .form-group
+                .col-sm-3
+                  %button.btn.btn-success.btn-addFrequency{onclick: "chart_addFrequency($(this))", type: "button"}
+                    %span.glyphicon.glyphicon-plus
+                    Ajouter
+                .col-sm-3
+                  %button.btn.btn-danger.btn-deleteBar{onclick: "chart_deleteLastFrequency($(this))", type: "button"}
+                    %span.glyphicon.glyphicon-minus
+                    Supprimer la dernière
           -elif answer.type == "professor"
             %input.form-control{id: "{{ forloop.counter0 }}", name: "{{ forloop.counter0 }}", type: "text", autocomplete: "off"}
             -#%textarea.form-control{id: "{{ forloop.counter0 }}", name: "{{ forloop.counter0 }}", rows: "5"}

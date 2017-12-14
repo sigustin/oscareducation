@@ -3,18 +3,30 @@
     TODO ; il faut gerer qund plusieurs questions sont posee; on peut avoir plusieurs reponses, mais pas plusieurs questions
 */
 
-var points = [[]];
-var AxisX = [];
-var AxisY = [];
+var frequencyPoints = [[]];
+var frequencyAxisX = [];
+var frequencyAxisY = [];
 var boardFrequencyChart = [];
-var maxX = [];
-var maxY = [];
-var zeroX = -1;
-var zeroY = -1;
+var frequencyMaxX = [];
+var frequencyMaxY = [];
+var frequencyZeroX = [];
+var frequencyZeroY = [];
 var chart_opacity = 1;
 $( document ).ready(function() {
-    chart_refreshFrequency();
+    chart_refreshFrequency()
 });
+
+function chart_refreshFrequency()
+{
+    var graphics = document.getElementsByClassName("chartQuestion");  //find all charts on the page
+    for(var i = 0;i<graphics.length;i++){
+        console.log("found "+graphics.length+" graphics");
+        chart_createFrequencyChart(graphics[i]);  //create the element founded
+    }
+    chart_createFrequencyChartFromForm()
+
+    chart_update_freq();
+}
 
 function chart_changeInput($scope)
 {
@@ -39,75 +51,55 @@ function chart_changeInput($scope)
     $scope.labelPie = "secteur";
 }
 
-function chart_refreshFrequency()
-{
-    var graphics = document.getElementsByClassName("chartQuestion");  //find all charts on the page
-    for(var i = 0;i<graphics.length;i++){
-        console.log("found "+graphics.length+" graphics");
-        chart_createChart(graphics[i]);  //create the element founded
-    }
-    chart_createFrequencyChartFromForm()
-
-
-}
-
 function chart_setFrequencyPoints()
 {
-	this.points = [[]];
+	this.frequencyPoints = [[]];
 }
 
 function chart_addFrequencyPoint(point,which)
 {
-	this.points[which].push(point);
+	this.frequencyPoints[which].push(point);
 }
 
 function chart_removeFrequencyPoint(which)
 {
-	this.points[which].pop();
+	this.frequencyPoints[which].pop();
 }
 
-function chart_setFrequencyAxis(AxisX,AxisY,which)
+function chart_setFrequencyAxis(frequencyAxisX,frequencyAxisY,which)
 {
-	this.AxisX[which] = AxisX;
-	this.AxisY[which] = AxisY;
+	this.frequencyAxisX[which] = frequencyAxisX;
+	this.frequencyAxisY[which] = frequencyAxisY;
 }
 
 function chart_setFrequencyOrigin(zX,zY,mX,mY,which)
 {
-	this.zeroX[which] = zX;
-	this.zeroY[which]= zY;
-	this.maxX[which]= mX;
-	this.maxY[which] = mY;
+	this.frequencyZeroX[which] = zX;
+	this.frequencyZeroY[which]= zY;
+	this.frequencyMaxX[which]= mX;
+	this.frequencyMaxY[which] = mY;
 }
 
 
-function chart_updateFrequencyForStudent()
+function chart_createFrequencyChart(element)
 {
-    graphics = document.getElementsByClassName("chartQuestionStudent");
-	var element;
-	for(var i = 0;i<graphics.length;i++)
-	{
+    var type = $(element).data( "chart-type" );
 
-        element = graphics[i];
-        var rawData = $(element).data( "chart-raw" );
-        var rawData2 = $(element).data( "chart-raw2" );
-        var rawData3 = $(element).data( "chart-raw3" );
-
-        precisionValue[i] = 1;
-        element.id = "board"+i;
-        var r = {};
-        r.AxisX = " nope";
-        r.AxisY = " Nope";
-        var box = [-1, 5, 5, -1];
-
+    var rawData = $(element).data( "chart-raw" );
+    var rawData2 = $(element).data( "chart-raw2" );
+    var rawData3 = $(element).data( "chart-raw3" );
+    var board;
+    if(type.includes("chart-frequencychart"))
+    {
+        var box = [-1, 10, 10, -1];
 
         if(rawData2 != null)
         {
-            rawData = chart_parse_orderedDict(rawData2);
+            rawData = chart_parse_orderedDictFrequency(rawData2);
         }
         if( rawData3 != null)
         {
-            rawData = chart_parse_orderedDict(rawData3);
+            rawData = chart_parse_orderedDictFrequency(rawData3);
         }
         /*
             if there is data given from the server, we must parse it.
@@ -125,13 +117,67 @@ function chart_updateFrequencyForStudent()
             r = parsed[0];
             if(rawData2 != null)r = parsed;
             if(rawData3 != null)r = parsed;
-            box = [r.zeroX, r.maxY,r.maxX,r.zeroY];
+            box = [r.frequencyZeroX, r.frequencyMaxY,r.frequencyMaxX,r.frequencyZeroY];
         }
+        
+        let board = JXG.JSXGraph.initBoard(element.id, { axis:true,showCopyright:false, boundingbox: box,showNavigation : false});
+        this.boardFrequencyChart[0] = board;
+       
+    }
 
+    chart_updateForStudent();
+}
+
+
+
+function chart_updateFrequencyForStudent()
+{
+    graphics = document.getElementsByClassName("chartQuestionStudent");
+	var element;
+	for(var i = 0;i<graphics.length;i++)
+	{
+        element = graphics[i];
+        var rawData = $(element).data( "chart-raw" );
+        var rawData2 = $(element).data( "chart-raw2" );
+        var rawData3 = $(element).data( "chart-raw3" );
+
+        element.id = "board"+i;
+        var r = {};
+        r.frequencyAxisX = " nope";
+        r.frequencyAxisY = " Nope";
+        var box = [-1, 5, 5, -1];
+		
+        if(rawData2 != null)
+        {
+            rawData = chart_parse_orderedDictFrequency(rawData2);
+        }
+        if( rawData3 != null)
+        {
+            rawData = chart_parse_orderedDictFrequency(rawData3);
+        }
+        /*
+            if there is data given from the server, we must parse it.
+            We all write bad code, but if it works, it works.
+            Don't judge, morty.
+        */
+        alert(rawData3)
+        if(rawData != undefined)
+        {
+            var test =String(rawData);
+            for(var temp = 0;temp<100;temp++) // I don't know why, but we must pass the regex as much as there answers
+                test = test.replace(/u'(?=[^:]+')/g, "'").replace(/'/g, '"').replace('u"', '"').replace("False", 'false').replace("True", 'true').replace('"{', '{').replace('}"', '}').replace('u"', '"')
+
+
+            var parsed =  JSON.parse(test);
+            r = parsed[0];
+            if(rawData2 != null)r = parsed;
+            if(rawData3 != null)r = parsed;
+            box = [r.frequencyZeroX, r.frequencyMaxY,r.frequencyMaxX,r.frequencyZeroY];
+        }
         let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-frequencyChartFromForm-"+i,axis:false,showCopyright:false, boundingbox:box,zoom:{factorX:0.75,factorY:0.75,wheel:true,eps:0.1}});
         this.boardFrequencyChart[i] = board;
         xaxis = board.create('axis', [[0,0],[1,0]],
-                    {name:r.AxisX,
+                    {name:r.frequencyAxisX,
                     withLabel:true,
                     label: {
                         position:'rt',
@@ -139,7 +185,7 @@ function chart_updateFrequencyForStudent()
                         }
                     });
         yaxis = board.create('axis', [[0,0],[0,1]],
-                    {name:AxisY,
+                    {name:r.frequencyAxisY,
                     withLabel:true,
                     label: {
                         position:'rt',
@@ -147,22 +193,22 @@ function chart_updateFrequencyForStudent()
                         }
                     });
         var temp =[];
-        if(this.points[i] == undefined) this.points[i] = [];
-        for(var j = 0;j<this.points[i].length;j++)
+        if(this.frequencyPoints[i] == undefined) this.frequencyPoints[i] = [];
+        for(var j = 0;j<this.frequencyPoints[i].length;j++)
         {
-            let p = this.boardFrequencyChart[i].create('point',[j+1,this.points[i][j].Y()],{name:'',size:3,face:'^'});
+            let p = this.boardFrequencyChart[i].create('point',[j+1,this.frequencyPoints[i][j].Y()],{name:'',size:3,face:'^'});
 			p.setProperty({fixed:true})
             temp.push(p);
         }
-        this.points[i] = temp;
-        for(var j = 0;j<this.points[i].length;j++)
+        this.frequencyPoints[i] = temp;
+        for(var j = 0;j<this.frequencyPoints[i].length;j++)
     	{
     		if(j==0){
-    			let p = this.boardFrequencyChart[i].create('line',[[0,0],[this.points[i][j].X(),this.points[i][j].Y()]],{straightFirst:false,straightLast:false,strokeWidth:2});
+    			let p = this.boardFrequencyChart[i].create('line',[[0,0],[this.frequencyPoints[i][j].X(),this.frequencyPoints[i][j].Y()]],{straightFirst:false,straightLast:false,strokeWidth:2});
 				p.setProperty({fixed:true})
     		}
     		else{
-    			let p = this.boardFrequencyChart[i].create('line',[[this.points[i][j-1].X(),this.points[i][j-1].Y()],[this.points[i][j].X(),this.points[i][j].Y()]],{straightFirst:false,straightLast:false,strokeWidth:2});
+    			let p = this.boardFrequencyChart[i].create('line',[[this.frequencyPoints[i][j-1].X(),this.frequencyPoints[i][j-1].Y()],[this.frequencyPoints[i][j].X(),this.frequencyPoints[i][j].Y()]],{straightFirst:false,straightLast:false,strokeWidth:2});
 				p.setProperty({fixed:true})
     		}
     	}
@@ -188,18 +234,18 @@ function chart_createFrequencyChartFromForm()
             var mY = parseInt($(".frequencyMaxY").eq(i).val());
             element = graphics[i];
 
-        	if(this.points == undefined)
+        	if(this.frequencyPoints == undefined)
         	{
         		chart_setFrequencyPoints(i);
         	}
         	chart_setFrequencyAxis(frequencyGraphX,frequencyGraphY,i);
-        	chart_setFrequencyOrigin(0,0,mX,mY,i);
+        	chart_setFrequencyOrigin(-1,-1,mX,mY,i);
 
             element.id = "board"+i;
-            let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-frequencyChartFromForm-"+i,fillOpacity:chart_opacity,axis:false,showCopyright:false, boundingbox: [-1, this.maxY[i], this.maxX[i], -1]});
+            let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-frequencyChartFromForm-"+i,fillOpacity:chart_opacity,axis:false,showCopyright:false, boundingbox: [-1, this.frequencyMaxY[i], this.frequencyMaxX[i], -1]});
             this.boardFrequencyChart[i] = board;
         	xaxis = board.create('axis', [[0,0],[1,0]],
-        				{name:this.AxisX[i],
+        				{name:this.frequencyAxisX[i],
         				withLabel:true,
         				label: {
         					position:'rt',
@@ -207,7 +253,7 @@ function chart_createFrequencyChartFromForm()
         					}
         				});
         	yaxis = board.create('axis', [[0,0],[0,1]],
-        				{name:this.AxisY[i],
+        				{name:this.frequencyAxisY[i],
         				withLabel:true,
         				label: {
         					position:'rt',
@@ -215,22 +261,22 @@ function chart_createFrequencyChartFromForm()
         					}
         				});
         	var temp =[];
-            if(this.points[i] == undefined) this.points[i] = [];
-        	for(var j = 0;j<this.points[i].length;j++)
+            if(this.frequencyPoints[i] == undefined) this.frequencyPoints[i] = [];
+        	for(var j = 0;j<this.frequencyPoints[i].length;j++)
         	{
-        		let p = this.boardFrequencyChart[i].create('point',[this.points[i][j].X(),this.points[i][j].Y()],{name:'',size:3,face:'[]'});
+        		let p = this.boardFrequencyChart[i].create('point',[this.frequencyPoints[i][j].X(),this.frequencyPoints[i][j].Y()],{name:'',size:3,face:'[]'});
 				p.setProperty({fixed:true})
         		temp.push(p);
         	}
-        	this.points[i] = temp;
-        	for(var j = 0;j<this.points[i].length;j++)
+        	this.frequencyPoints[i] = temp;
+        	for(var j = 0;j<this.frequencyPoints[i].length;j++)
         	{
         		if(j==0){
-        			let p = this.boardFrequencyChart[i].create('line',[[0,0],[this.points[i][j].X(),this.points[i][j].Y()]],{straightFirst:false,straightLast:false,strokeWidth:2});
+        			let p = this.boardFrequencyChart[i].create('line',[[0,0],[this.frequencyPoints[i][j].X(),this.frequencyPoints[i][j].Y()]],{straightFirst:false,straightLast:false,strokeWidth:2});
 					p.setProperty({fixed:true})
         		}
         		else{
-        			let p = this.boardFrequencyChart[i].create('line',[[this.points[i][j-1].X(),this.points[i][j-1].Y()],[this.points[i][j].X(),this.points[i][j].Y()]],{straightFirst:false,straightLast:false,strokeWidth:2});
+        			let p = this.boardFrequencyChart[i].create('line',[[this.frequencyPoints[i][j-1].X(),this.frequencyPoints[i][j-1].Y()],[this.frequencyPoints[i][j].X(),this.frequencyPoints[i][j].Y()]],{straightFirst:false,straightLast:false,strokeWidth:2});
 					p.setProperty({fixed:true})
         		}
         	}
@@ -253,15 +299,15 @@ function chart_addFrequency(element)
 	else if(isNaN(newFrequencyY) || newFrequencyY <= 0){
 		alert("Veuillez donner une ordonnée correcte (>0)")
 	}
-	else if(this.points[index].length>1 && newFrequencyX <= this.points[index][this.points[index].length-1].X()){
+	else if(this.frequencyPoints[index].length>1 && newFrequencyX <= this.frequencyPoints[index][this.frequencyPoints[index].length-1].X()){
 		alert("Veuillez supprimer le dernier point ou mettre un nouveau point d'abscisse supérieure")
 	}
 	else{
 		var p = this.boardFrequencyChart[index].create('point',[newFrequencyX,newFrequencyY],{name:'',size:3,face:'[]'});
 		p.setProperty({fixed:true})
 		chart_addFrequencyPoint(p,index);
-		if(this.points[index].length>1){
-			var l = this.boardFrequencyChart[index].create('line',[[this.points[index][this.points[index].length-1].X(),this.points[index][this.points[index].length-1].Y()],[newFrequencyX,newFrequencyY]],{straightFirst:false,straightLast:false,strokeWidth:2});
+		if(this.frequencyPoints[index].length>1){
+			var l = this.boardFrequencyChart[index].create('line',[[this.frequencyPoints[index][this.frequencyPoints[index].length-1].X(),this.frequencyPoints[index][this.frequencyPoints[index].length-1].Y()],[newFrequencyX,newFrequencyY]],{straightFirst:false,straightLast:false,strokeWidth:2});
 			l.setProperty({fixed:true})
 		}
 		else{
@@ -299,30 +345,30 @@ function chart_getJSONFrequency(index)
 {
     pointValueX = [];
     pointValueY = [];
-    if(this.points[index] == undefined)this.points[index] = [];
-    for(var i = 0;i<this.points[index].length;i++)
+    if(this.frequencyPoints[index] == undefined)this.frequencyPoints[index] = [];
+    for(var i = 0;i<this.frequencyPoints[index].length;i++)
     {
-        pointValueX.push(this.points[index][i].X());
-        pointValueY.push(this.points[index][i].Y());
+        pointValueX.push(this.frequencyPoints[index][i].X());
+        pointValueY.push(this.frequencyPoints[index][i].Y());
     }
 
     console.log("asked jsson frequency")
     var t =  JSON.stringify({
         "pointX":pointValueX,
         "pointY":pointValueY,
-        "AxisX":AxisX[index],
-        "AxisY":AxisY[index],
-        "zeroX":zeroX[index],
-        "zeroY":zeroY[index],
-        "maxX":maxX[index],
-        "maxY":maxY[index]
+        "frequencyAxisX":this.frequencyAxisX[index],
+        "frequencyAxisY":this.frequencyAxisY[index],
+        "frequencyZeroX":this.frequencyZeroX[index],
+        "frequencyZeroY":this.frequencyZeroY[index],
+        "frequencyMaxX":this.frequencyMaxX[index],
+        "frequencyMaxY":this.frequencyMaxY[index]
     });
     console.log(t);
     return t;
 }
 
 
-function chart_parse_orderedDict(orderedDictStr)
+function chart_parse_orderedDictFrequency(orderedDictStr)
 {
     return orderedDictStr.substring(orderedDictStr.indexOf("chart")+9,orderedDictStr.lastIndexOf('}')+1);
 }

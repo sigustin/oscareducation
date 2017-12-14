@@ -7,6 +7,7 @@
     %script{type: "text/javascript", src: "{% static 'js/professor_validate_exercice.js' %}"}
     %script{type: "text/javascript", src: "{% static 'js/barchart.js' %}"}
     %script{type: "text/javascript", src: "{% static 'js/piechart.js' %}"}
+    %script{type: "text/javascript", src: "{% static 'js/frequencychart.js' %}"}
     %script{type: "text/javascript", src: "{% static 'js/previsualize_chart_from_page.js' %}"}
 -block breadcrumb
   %ol.breadcrumb
@@ -98,6 +99,7 @@
                     %optgroup{label: "Graphiques"}
                       %option{value: "chart-barchart"} Réponse sur un graphique en bâtonnets
                       %option{value: "chart-piechart"} Réponse sur un graphique circulaire
+                      %option{value: "chart-frequencychart"} Réponse sur un polygone de fréquences
                     %option{value: "professor"} Réponse corrigée par le professeur
               .form-group
                 %label.control-label.col-sm-2 Source(s)
@@ -165,7 +167,7 @@
                     %label.control-label.col-sm-3 precision des barres
                     .col-sm-9
                       %input.form-control{id: "precisionValue",class: "precisionValue",type: "number", ng-model: "precisionValue", ng-required: "false"}
-                  %button.btn.btn-success.btn-sm.btn-updateBar{ng-model: "createBarChart", onclick: "chart_btnUpdate($(this))", type: "button"}
+                  %button.btn.btn-success.btn-sm.btn-updateBar{ng-model: "createBarChart", onclick: "chart_btnUpdateBar($(this))", type: "button"}
                     %span.glyphicon.glyphicon-ok
                     Mettre à jour le graphique
                   .jxgbox.chartQuestion.chartQuestionValidation.chartQuestionBarchart#jxgbox{id:barChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-barchart",value:"chart-barchart"}
@@ -181,7 +183,6 @@
                       %button.btn.btn-danger.btn-deleteBar{onclick: "chart_deleteLastBar($(this))", type: "button"}
                         %span.glyphicon.glyphicon-minus
                         Supprimer la dernière
-                  -# = .jxgbox.chartQuestion.chartQuestionValidation.chartQuestionBarchart#jxgbox{style:"width:100%; height:676px;",data-chart-type:"piechart",data-chart-percent:'[20,30,50]',data-chart-label:'["math","francais","Sciences"]'}
 
                 .form-horizontal{ng-if: "question.type == \"chart-piechart\""}
                   .form-group
@@ -202,6 +203,43 @@
                         Supprimer la dernière
                   .jxgbox.chartQuestion.chartQuestionValidation.chartQuestionPiechart#jxgbox{id:pieChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart"}
                   -# = .jxgbox.chartQuestion.chartQuestionValidation#jxgbox{style:"width:100%; height:676px;",data-chart-type:"piechart",data-chart-percent:'[20,30,50]',data-chart-label:'["math","francais","Sciences"]'}
+                  
+                .form-horizontal{ng-if: "question.type == \"chart-frequencychart\""}
+                  .form-group
+                    %label.control-label.col-sm-3 Nom de l'axe des abscisses
+                    .col-sm-9
+                      %input.form-control{id: "frequencyGraphX",class: "frequencyGraphX",type: "text", ng-model: "frequencyGraphX", ng-required: "false"}
+                  .form-group
+                    %label.control-label.col-sm-3 Nom de l'axe des ordonnées
+                    .col-sm-9
+                       %input.form-control{id: "frequencyGraphY", class:"frequencyGraphY",type: "text", ng-model: "frequencyGraphY", ng-required: "false"}
+                  .form-group
+                    %label.control-label.col-sm-3 Abscisse maximale
+                    .col-sm-9
+                      %input.form-control{id: "frequencyMaxX",class: "frequencyMaxX",type: "number", ng-model: "frequencyMaxX", ng-required: "false"}
+                  .form-group
+                    %label.control-label.col-sm-3 Ordonnée maximale
+                    .col-sm-9
+                      %input.form-control{id: "frequencyMaxY",class: "frequencyMaxY",type: "number", ng-model: "frequencyMaxY", ng-required: "false"}
+                  %button.btn.btn-success.btn-sm.btn-updateFrequency{ng-model: "createFrequencyChart", onclick: "chart_btnUpdateFrequency($(this))", type: "button"}
+                    %span.glyphicon.glyphicon-ok
+                    Mettre à jour le graphique
+                  .jxgbox.chartQuestion.chartQuestionValidation.chartQuestionFrequencychart#jxgbox{id:frequencyChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-frequencychart",value:"chart-frequencychart"}
+                  .form-group
+                    %label.control-label.col-sm-3 Ajouter un nouveau point
+                  .form-group
+                    .col-sm-3
+                      %input.form-control{id: "newFrequencyX",class: "newFrequencyX",type: "number", ng-model: "newFrequencyX", ng-required: "false"}
+                    .col-sm-3
+                      %input.form-control{id: "newFrequencyY",class: "newFrequencyY",type: "number", ng-model: "newFrequencyY", ng-required: "false"}
+                    .col-sm-2
+                      %button.btn.btn-success.btn-addFrequency{onclick: "chart_addFrequency($(this))", type: "button"}
+                        %span.glyphicon.glyphicon-plus
+                        Ajouter
+                    .col-sm-2
+                      %button.btn.btn-danger.btn-deleteFrequency{onclick: "chart_deleteLastFrequency($(this))", type: "button"}
+                        %span.glyphicon.glyphicon-minus
+                        Supprimer la dernière
 
                 .form-horizontal{ng-if: "question.type == \"graph\""}
                   .form-group

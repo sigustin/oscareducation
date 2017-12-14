@@ -133,8 +133,6 @@ function chart_updateForStudent()
         {
             rawData = chart_parse_orderedDictBar(rawData3);
         }
-        alert("raw")
-        alert(rawData3)
         /*
             if there is data given from the server, we must parse it.
             We all write bad code, but if it works, it works.
@@ -353,7 +351,6 @@ function chart_getPointValue(points,index)
 function chart_add(element)
 {
     var index = $(".btn-addBar").index(element);
-    alert(index)
 	var newBarY = parseInt($(".newBarY").eq(index).val());
 	var p = this.boardBarChart[index].create('point',[this.bars[index].length+1,newBarY],{name:'',size:7,face:'^'});
 	chart_addBar(newBarY,index);

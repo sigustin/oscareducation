@@ -160,7 +160,6 @@ function chart_updateFrequencyForStudent()
             We all write bad code, but if it works, it works.
             Don't judge, morty.
         */
-        alert(rawData3)
         if(rawData != undefined)
         {
             var test =String(rawData);

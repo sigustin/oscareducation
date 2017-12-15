@@ -133,22 +133,12 @@ function chart_createPieChartFromForm()
 	chart_createPieChartStudent(false)
 }
 
-
-var changePieChartHiddenInput = function()
-{
-    var data = {"data":dataArr[0],"labels":labels[0]}
-    $("#piechart-hiddenInput").val(JSON.stringify(data));
-    console.log($("#piechart-hiddenInput").val())
-
-}
-
 function create_pieChart(element,index)
 {
 	var colorsChart = [];
 	var labelsChart = [];
 	var sum = 0;
 	var lastPortion = [];
-
 	for(var i = 0;i<dataArr[index].length;i++)
 	{
 		colorsChart.push(colors[i%colors.length]);

@@ -44,7 +44,6 @@ down = function(e) {
 
 function chart_changeInput($scope)
 {
-	alert("scope")
     $scope.barGraphX = "abscisses";
     $scope.barGraphY = "ordonnees";
     $scope.stepX = 1;
@@ -56,11 +55,15 @@ function chart_changeInput($scope)
     $scope.maxX = 10;
     $scope.maxY = 10;
 
+
+    $scope.frequencyGraphX = "abscisses";
+    $scope.frequencyGraphY = "ordonnees";
+    $scope.frequencyMaxX = 10;
+    $scope.frequencyMaxY = 10;
+
     $scope.sector = 90;
     $scope.labelPie = "secteur";
-    alert("hm")
 }
-
 
 function chart_changeScopeQuestions(questions)
 {

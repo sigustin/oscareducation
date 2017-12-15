@@ -139,7 +139,6 @@ function create_pieChart(element,index)
 	var labelsChart = [];
 	var sum = 0;
 	var lastPortion = [];
-
 	for(var i = 0;i<dataArr[index].length;i++)
 	{
 		colorsChart.push(colors[i%colors.length]);

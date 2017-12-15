@@ -338,6 +338,7 @@ function chart_getPointValue(points,index)
 function chart_add(element)
 {
     var index = $(".btn-addBar").index(element);
+    alert(index)
 	var newBarY = parseInt($(".newBarY").eq(index).val());
 	var p = this.boardBarChart[index].create('point',[this.bars[index].length+1,newBarY],{name:'',size:7,face:'^'});
 	chart_addBar(newBarY,index);

@@ -25,8 +25,8 @@ def validate_exercice_yaml_structure(exercice):
         if "type" not in data:
             return (u"chaque question doit avoir un type, or la question '%s' n'a pas de type" % (question)).encode("Utf-8")
 
-        if data["type"] not in ("radio", "text", "checkbox", "math", "math-simple", "math-advanced", "graph", "professor", "chart-barchart","chart-piechart","chart-frequencychart"):
-            return (u"la question '%s' possède un type invalide: '%s'\nLes types valides sont : 'text', 'checkbox', 'math', 'math-simple', 'math-advanced', 'graph', 'radio', 'chart-barchart','chart-piechart' et 'chart-frequencychart'" % (question, data["type"])).encode("Utf-8")
+        if data["type"] not in ("radio", "text", "checkbox", "math", "math-simple", "math-advanced", "graph", "professor", "chart-barchart","chart-piechart"):
+            return (u"la question '%s' possède un type invalide: '%s'\nLes types valides sont : 'text', 'checkbox', 'math', 'math-simple', 'math-advanced', 'graph', 'radio', 'chart-barchart' et 'chart-piechart' " % (question, data["type"])).encode("Utf-8")
 
         if "answers" not in data:
             return (u"chaque question doit avoir une section 'answers' contenant les réponses, or la question '%s' ne contient pas cette section" % (question)).encode("Utf-8")
@@ -96,9 +96,6 @@ def validate_exercice_yaml_structure(exercice):
             pass  # For the moment TODO make checks if necessary
         # Group 7
         elif data["type"] == "chart-piechart":
-            pass  # For the moment TODO make checks if necessary
-        # Group 7
-        elif data["type"] == "chart-frequencychart":
             pass  # For the moment TODO make checks if necessary
 
         else:

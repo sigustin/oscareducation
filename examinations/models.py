@@ -13,6 +13,8 @@ import yamlordereddictloader
 import json
 import re
 
+from chart.evaluate_chart import evaluate_chart
+
 
 class Context(models.Model):
     """[FR] Contexte, Exercice

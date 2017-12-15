@@ -4,28 +4,43 @@
 */
 
 var bars = [[]];
-var barAxisX = [];
-var barAxisY = [];
+var AxisX = [];
+var AxisY = [];
 var boardBarChart = [];
-var barZeroX = [];
-var barZeroY = [];
-var barMaxX = [];
-var barMaxY = [];
-var barPoints = [[]];
+var zeroX = [];
+var zeroY = [];
+var maxX = [];
+var maxY = [];
+var points = [[]];
 var precisionValue = [];
 var chart_opacity = 1;
-$( document ).ready(function() {	
-    chart_changeInput($scope)
+$( document ).ready(function() {
     chart_refresh();
 });
 
+function chart_changeInput($scope)
+{
+    $scope.barGraphX = "abscisses";
+    $scope.barGraphY = "ordonnees";
+    $scope.stepX = 1;
+    $scope.stepY = 1;
+    $scope.precisionValue = 1;
+
+    $scope.zeroX = -1;
+    $scope.zeroY = -1;
+    $scope.maxX = 10;
+    $scope.maxY = 10;
+
+    $scope.sector = 90;
+    $scope.labelPie = "secteur";
+}
 
 function chart_refresh()
 {
     var graphics = document.getElementsByClassName("chartQuestion");  //find all charts on the page
     for(var i = 0;i<graphics.length;i++){
         console.log("found "+graphics.length+" graphics");
-        chart_createBarChart(graphics[i]);  //create the element founded
+        chart_createChart(graphics[i]);  //create the element founded
     }
     chart_createBarChartFromForm()
 
@@ -34,8 +49,8 @@ function chart_refresh()
         //update the hidden field every 1/2 second. It works.
         setInterval(function(){
             var bar = [];
-            for(var i = 0;i<this.barPoints[0].length;i++){
-                bar.push(chart_getPointValue(this.barPoints[0],i)());
+            for(var i = 0;i<points[0].length;i++){
+                bar.push(chart_getPointValue(points[0],i)());
             }
 
             $("#barchart-hiddenInput").val(bar);
@@ -43,7 +58,14 @@ function chart_refresh()
         }, 500);
 
     }
-    chart_update();
+
+    if($("#piechart-hiddenInput"))
+    {
+        //update the hidden field every 1/2 second. It works.
+        setInterval(changePieChartHiddenInput, 500);
+
+    }
+
 }
 
 function chart_setBars()
@@ -51,9 +73,9 @@ function chart_setBars()
 	this.bars = [[]];
 }
 
-function chart_setBarPoints()
+function chart_setPoints()
 {
-	this.barPoints = [[]];
+	this.points = [[]];
 }
 
 function chart_addBar(bar,which)
@@ -63,7 +85,7 @@ function chart_addBar(bar,which)
 
 function chart_addPoint(point,which)
 {
-	this.barPoints[which].push(point);
+	this.points[which].push(point);
 }
 function chart_removeBar(which)
 {
@@ -72,21 +94,21 @@ function chart_removeBar(which)
 
 function chart_removePoint(which)
 {
-	this.barPoints[which].pop();
+	this.points[which].pop();
 }
 
-function chart_setBarAxis(barAxisX,barAxisY,which)
+function chart_setAxis(AxisX,AxisY,which)
 {
-	this.barAxisX[which] = barAxisX;
-	this.barAxisY[which] = barAxisY;
+	this.AxisX[which] = AxisX;
+	this.AxisY[which] = AxisY;
 }
 
 function chart_setOrigin(zX,zY,mX,mY,which)
 {
-	this.barZeroX[which] = zX;
-	this.barZeroY[which]= zY;
-	this.barMaxX[which]= mX;
-	this.barMaxY[which] = mY;
+	this.zeroX[which] = zX;
+	this.zeroY[which]= zY;
+	this.maxX[which]= mX;
+	this.maxY[which] = mY;
 }
 
 
@@ -105,18 +127,18 @@ function chart_updateForStudent()
         precisionValue[i] = 1;
         element.id = "board"+i;
         var r = {};
-        r.barAxisX = " nope";
-        r.barAxisY = " Nope";
+        r.AxisX = " nope";
+        r.AxisY = " Nope";
         var box = [-1, 5, 5, -1];
 
 
         if(rawData2 != null)
         {
-            rawData = chart_parse_orderedDictBar(rawData2);
+            rawData = chart_parse_orderedDict(rawData2);
         }
         if( rawData3 != null)
         {
-            rawData = chart_parse_orderedDictBar(rawData3);
+            rawData = chart_parse_orderedDict(rawData3);
         }
         /*
             if there is data given from the server, we must parse it.
@@ -128,18 +150,19 @@ function chart_updateForStudent()
             var test =String(rawData);
             for(var temp = 0;temp<100;temp++) // I don't know why, but we must pass the regex as much as there answers
                 test = test.replace(/u'(?=[^:]+')/g, "'").replace(/'/g, '"').replace('u"', '"').replace("False", 'false').replace("True", 'true').replace('"{', '{').replace('}"', '}').replace('u"', '"')
+
+
             var parsed =  JSON.parse(test);
             r = parsed[0];
             if(rawData2 != null)r = parsed;
             if(rawData3 != null)r = parsed;
-            box = [r.barZeroX, r.barMaxY,r.barMaxX,r.barZeroY];
+            box = [r.zeroX, r.maxY,r.maxX,r.zeroY];
         }
 
         let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,axis:false,showCopyright:false, boundingbox:box});
-        
         this.boardBarChart[i] = board;
         xaxis = board.create('axis', [[0,0],[1,0]],
-                    {name:r.barAxisX,
+                    {name:r.AxisX,
                     withLabel:true,
                     label: {
                         position:'rt',
@@ -147,7 +170,7 @@ function chart_updateForStudent()
                         }
                     });
         yaxis = board.create('axis', [[0,0],[0,1]],
-                    {name:r.barAxisY,
+                    {name:AxisY,
                     withLabel:true,
                     label: {
                         position:'rt',
@@ -155,19 +178,18 @@ function chart_updateForStudent()
                         }
                     });
         var temp =[];
-        if(this.barPoints[i] == undefined) this.barPoints[i] = [];
+        if(this.points[i] == undefined) this.points[i] = [];
         if(this.bars[i] == undefined) this.bars[i] = [];
-        for(var j = 0;j<this.barPoints[i].length;j++)
+        for(var j = 0;j<this.points[i].length;j++)
         {
-            let p = this.boardBarChart[i].create('point',[j+1,this.barPoints[i][j].Y()],{name:'',size:7,face:'^'});
+            let p = this.boardBarChart[i].create('point',[j+1,this.points[i][j].Y()],{name:'',size:7,face:'^'});
             temp.push(p);
         }
-		
-        this.barPoints[i] = temp;
+        this.points[i] = temp;
         this.bars[i] = []
-        for(var j = 0;j<this.barPoints[i].length;j++)
+        for(var j = 0;j<this.points[i].length;j++)
         {
-            this.bars[i].push(chart_getPointValue(this.barPoints[i],j));
+            this.bars[i].push(chart_getPointValue(this.points[i],j));
         }
         let chart;
         if(this.bars[i] != undefined)
@@ -206,19 +228,19 @@ function chart_createBarChartFromForm()
             var mY = parseInt($(".maxY").eq(i).val());
             element = graphics[i];
 
-        	if(this.barPoints == undefined && this.bars == undefined)
+        	if(this.points == undefined && this.bars == undefined)
         	{
-        		chart_setBarPoints(i);
+        		chart_setPoints(i);
         	}
         	chart_setBars(i);
-        	chart_setBarAxis(barGraphX,barGraphY,i);
+        	chart_setAxis(barGraphX,barGraphY,i);
         	chart_setOrigin(zX,zY,mX,mY,i);
 
             element.id = "board"+i;
-            let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,fillOpacity:chart_opacity,axis:false,showCopyright:false, boundingbox: [this.barZeroX[i], this.barMaxY[i], this.barMaxX[i], this.barZeroY[i]]});
+            let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,fillOpacity:chart_opacity,axis:false,showCopyright:false, boundingbox: [this.zeroX[i], this.maxY[i], this.maxX[i], this.zeroY[i]]});
             this.boardBarChart[i] = board;
         	xaxis = board.create('axis', [[0,0],[1,0]],
-        				{name:this.barAxisX[i],
+        				{name:this.AxisX[i],
         				withLabel:true,
         				label: {
         					position:'rt',
@@ -226,7 +248,7 @@ function chart_createBarChartFromForm()
         					}
         				});
         	yaxis = board.create('axis', [[0,0],[0,1]],
-        				{name:this.barAxisY[i],
+        				{name:this.AxisY[i],
         				withLabel:true,
         				label: {
         					position:'rt',
@@ -234,17 +256,17 @@ function chart_createBarChartFromForm()
         					}
         				});
         	var temp =[];
-            if(this.barPoints[i] == undefined) this.barPoints[i] = [];
+            if(this.points[i] == undefined) this.points[i] = [];
             if(this.bars[i] == undefined) this.bars[i] = [];
-        	for(var j = 0;j<this.barPoints[i].length;j++)
+        	for(var j = 0;j<this.points[i].length;j++)
         	{
-        		let p = this.boardBarChart[i].create('point',[j+1,this.barPoints[i][j].Y()],{name:'',size:7,face:'^'});
+        		let p = this.boardBarChart[i].create('point',[j+1,this.points[i][j].Y()],{name:'',size:7,face:'^'});
         		temp.push(p);
         	}
-        	this.barPoints[i] = temp;
-        	for(var j = 0;j<this.barPoints[i].length;j++)
+        	this.points[i] = temp;
+        	for(var j = 0;j<this.points[i].length;j++)
         	{
-                this.bars[i].push(chart_getPointValue(this.barPoints[i],j));
+                this.bars[i].push(chart_getPointValue(this.points[i],j));
             }
             let chart;
             if(this.bars[i] != undefined)
@@ -260,7 +282,7 @@ function chart_createBarChartFromForm()
 
 }
 
-function chart_createBarChart(element)
+function chart_createChart(element)
 {
     var type = $(element).data( "chart-type" );
 
@@ -275,11 +297,11 @@ function chart_createBarChart(element)
 
         if(rawData2 != null)
         {
-            rawData = chart_parse_orderedDictBar(rawData2);
+            rawData = chart_parse_orderedDict(rawData2);
         }
         if( rawData3 != null)
         {
-            rawData = chart_parse_orderedDictBar(rawData3);
+            rawData = chart_parse_orderedDict(rawData3);
         }
         /*
             if there is data given from the server, we must parse it.
@@ -297,7 +319,7 @@ function chart_createBarChart(element)
             let r = parsed[0];
             if(rawData2 != null)r = parsed;
             if(rawData3 != null)r = parsed;
-            box = [r.barZeroX, r.barMaxY,r.barMaxX,r.barZeroY];
+            box = [r.zeroX, r.maxY,r.maxX,r.zeroY];
         }
 
         let board = JXG.JSXGraph.initBoard(element.id, { axis:true,showCopyright:false, boundingbox: box,showNavigation : false});
@@ -338,7 +360,6 @@ function chart_getPointValue(points,index)
 function chart_add(element)
 {
     var index = $(".btn-addBar").index(element);
-    alert(index)
 	var newBarY = parseInt($(".newBarY").eq(index).val());
 	var p = this.boardBarChart[index].create('point',[this.bars[index].length+1,newBarY],{name:'',size:7,face:'^'});
 	chart_addBar(newBarY,index);
@@ -347,7 +368,7 @@ function chart_add(element)
 }
 
 
-function chart_btnUpdateBar(element)
+function chart_btnUpdate(element)
 {
     var index = $(".btn-updateBar").index(element);
     chart_createBarChartFromForm();
@@ -357,9 +378,37 @@ function chart_update()
 {
     chart_createBarChartFromForm();
     chart_updateForStudent();
+
 }
 
 
+
+function chart_changeScopeQuestions(questions)
+{
+	alert("yo")
+    var counterBar = 0;
+    var counterPie = 0;
+    for(var i = 0;i<questions.length;i++)
+    {
+        if(questions[i].type == "chart-barchart")
+        {
+            for(var j = 0;j<questions[i].answers.length;j++)
+            {
+                questions[i].answers[j].chart = chart_getJSONBar(counterBar);
+                counterBar++;
+            }
+        }
+        if(questions[i].type == "chart-piechart")
+        {
+            for(var j = 0;j<questions[i].answers.length;j++)
+            {
+                questions[i].answers[j].chart = chart_getJSONPie(counterPie);
+                counterPie++;
+            }
+        }
+    }
+    return questions;
+}
 
 
 function chart_deleteLastBar(element)
@@ -376,16 +425,16 @@ function chart_getJSONBar(index)
     if(bars[index] == undefined)bars[index] = [];
     for(var i = 0;i<bars[index].length;i++)
     {
-        pointValue.push(this.bars[index][i]());
+        pointValue.push(bars[index][i]());
     }
     return JSON.stringify({
         "point":pointValue,
-        "barAxisX":barAxisX[index],
-        "barAxisY":barAxisY[index],
-        "barZeroX":barZeroX[index],
-        "barZeroY":barZeroY[index],
-        "barMaxX":barMaxX[index],
-        "barMaxY":barMaxY[index],
+        "AxisX":AxisX[index],
+        "AxisY":AxisY[index],
+        "zeroX":zeroX[index],
+        "zeroY":zeroY[index],
+        "maxX":maxX[index],
+        "maxY":maxY[index],
         "precisionValue":precisionValue[index]
     });
 }
@@ -398,7 +447,7 @@ function chart_roundToStep(number,step)
     return lowest;
 }
 
-function chart_parse_orderedDictBar(orderedDictStr)
+function chart_parse_orderedDict(orderedDictStr)
 {
     return orderedDictStr.substring(orderedDictStr.indexOf("chart")+9,orderedDictStr.lastIndexOf('}')+1);
 }

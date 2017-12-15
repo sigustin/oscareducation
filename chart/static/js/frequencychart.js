@@ -28,28 +28,6 @@ function chart_refreshFrequency()
     chart_update_freq();
 }
 
-function chart_changeInput($scope)
-{
-    $scope.barGraphX = "abscisses";
-    $scope.barGraphY = "ordonnees";
-    $scope.stepX = 1;
-    $scope.stepY = 1;
-    $scope.precisionValue = 1;
-
-    $scope.zeroX = -1;
-    $scope.zeroY = -1;
-    $scope.maxX = 10;
-    $scope.maxY = 10;
-
-
-    $scope.frequencyGraphX = "abscisses";
-    $scope.frequencyGraphY = "ordonnees";
-    $scope.frequencyMaxX = 10;
-    $scope.frequencyMaxY = 10;
-
-    $scope.sector = 90;
-    $scope.labelPie = "secteur";
-}
 
 function chart_setFrequencyPoints()
 {
@@ -122,10 +100,45 @@ function chart_createFrequencyChart(element)
         
         let board = JXG.JSXGraph.initBoard(element.id, { axis:true,showCopyright:false, boundingbox: box,showNavigation : false});
         this.boardFrequencyChart[0] = board;
+        
+        
+    	var getMouseCoords = function(e, j) {
+			var cPos = board.getCoordsTopLeftCorner()
+			var absPos = JXG.getPosition(e, j)
+			var dx = absPos[0]-cPos[0]
+			var dy = absPos[1]-cPos[1]
+
+			return new JXG.Coords(JXG.COORDS_BY_SCREEN, [dx, dy], board);
+		}	
+        var down = function(e) {
+        	if(e != undefined){
+				var canCreate = true, j, coords, el;
+
+				if (e[JXG.touchProperty]) {
+					// index of the finger that is used to extract the coordinates
+					j = 0;
+				}
+				coords = getMouseCoords(e,j);
+			
+				for (el in board.objects) {
+					if(JXG.isPoint(board.objects[el]) && board.objects[el].hasPoint(coords.scrCoords[1], coords.scrCoords[2])) {
+						canCreate = false;
+						break;
+					}
+				}
+			
+
+				if (canCreate) {
+					chart_addFrequencyMouse([round(coords.usrCoords[1]), round(coords.usrCoords[2])],board)
+				}
+			}
+		}	
+		
+		
+		this.boardFrequencyChart[0].on('down',down);
        
     }
-
-    chart_updateForStudent();
+    chart_updateFrequencyStudent();
 }
 
 
@@ -195,7 +208,7 @@ function chart_updateFrequencyForStudent()
         if(this.frequencyPoints[i] == undefined) this.frequencyPoints[i] = [];
         for(var j = 0;j<this.frequencyPoints[i].length;j++)
         {
-            let p = this.boardFrequencyChart[i].create('point',[j+1,this.frequencyPoints[i][j].Y()],{name:'',size:3,face:'^'});
+            let p = this.boardFrequencyChart[i].create('point',[this.frequencyPoints[i][j].X(),this.frequencyPoints[i][j].Y()],{name:'',size:3,face:'[]'});
 			p.setProperty({fixed:true})
             temp.push(p);
         }
@@ -211,6 +224,44 @@ function chart_updateFrequencyForStudent()
 				p.setProperty({fixed:true})
     		}
     	}
+    	
+    	var getMouseCoords = function(e, j) {
+			var cPos = board.getCoordsTopLeftCorner()
+			var absPos = JXG.getPosition(e, j)
+			var dx = absPos[0]-cPos[0]
+			var dy = absPos[1]-cPos[1]
+
+			return new JXG.Coords(JXG.COORDS_BY_SCREEN, [dx, dy], board);
+		}	
+        var down = function(e) {
+        	if(e != undefined){
+				var canCreate = true, j, coords, el;
+
+				if (e[JXG.touchProperty]) {
+					// index of the finger that is used to extract the coordinates
+					j = 0;
+				}
+				coords = getMouseCoords(e,j);
+			
+				for (el in board.objects) {
+					if(JXG.isPoint(board.objects[el]) && board.objects[el].hasPoint(coords.scrCoords[1], coords.scrCoords[2])) {
+						canCreate = false;
+						break;
+					}
+				}
+			
+
+				if (canCreate) {
+					chart_addFrequencyMouse([round(coords.usrCoords[1]), round(coords.usrCoords[2])],board)
+				}
+			}
+		}	
+		
+		
+		this.boardFrequencyChart[i].on('down',down);
+    	
+    	
+    	
 	}
 
 
@@ -279,6 +330,44 @@ function chart_createFrequencyChartFromForm()
 					p.setProperty({fixed:true})
         		}
         	}
+		var getMouseCoords = function(e, j) {
+			var cPos = board.getCoordsTopLeftCorner()
+			var absPos = JXG.getPosition(e, j)
+			var dx = absPos[0]-cPos[0]
+			var dy = absPos[1]-cPos[1]
+
+			return new JXG.Coords(JXG.COORDS_BY_SCREEN, [dx, dy], board);
+		}	
+        var down = function(e) {
+        	if(e != undefined){
+				var canCreate = true, j, coords, el;
+
+				if (e[JXG.touchProperty]) {
+					// index of the finger that is used to extract the coordinates
+					j = 0;
+				}
+				coords = getMouseCoords(e,j);
+			
+				for (el in board.objects) {
+					if(JXG.isPoint(board.objects[el]) && board.objects[el].hasPoint(coords.scrCoords[1], coords.scrCoords[2])) {
+						canCreate = false;
+						break;
+					}
+				}
+			
+
+				if (canCreate) {
+					chart_addFrequencyMouse([round(coords.usrCoords[1]), round(coords.usrCoords[2])],board)
+				}
+			}
+		}	
+		
+		
+		this.boardFrequencyChart[i].on('down',down);
+		
+		
+
+		
         }
 	}
 
@@ -317,6 +406,36 @@ function chart_addFrequency(element)
    	}
 }
 
+function chart_addFrequencyMouse(point,board)
+{
+	if(this.boardFrequencyChart.includes(board)) index = this.boardFrequencyChart.indexOf(board)
+	var newFrequencyX = point[0]
+	var newFrequencyY = point[1]
+	if(isNaN(newFrequencyX) || newFrequencyX <= 0){
+		alert("Veuillez donner une abscisse correcte (>0)")
+	}
+	else if(isNaN(newFrequencyY) || newFrequencyY <= 0){
+		alert("Veuillez donner une ordonnée correcte (>0)")
+	}
+	else if(this.frequencyPoints[index].length>1 && newFrequencyX <= this.frequencyPoints[index][this.frequencyPoints[index].length-1].X()){
+		alert("Veuillez supprimer le dernier point ou mettre un nouveau point d'abscisse supérieure")
+	}
+	else{
+		var p = this.boardFrequencyChart[index].create('point',[newFrequencyX,newFrequencyY],{name:'',size:3,face:'[]'});
+		p.setProperty({fixed:true})
+		chart_addFrequencyPoint(p,index);
+		if(this.frequencyPoints[index].length>1){
+			var l = this.boardFrequencyChart[index].create('line',[[this.frequencyPoints[index][this.frequencyPoints[index].length-1].X(),this.frequencyPoints[index][this.frequencyPoints[index].length-1].Y()],[newFrequencyX,newFrequencyY]],{straightFirst:false,straightLast:false,strokeWidth:2});
+			l.setProperty({fixed:true})
+		}
+		else{
+			var l = this.boardFrequencyChart[index].create('line',[[0,0],[newFrequencyX,newFrequencyY]],{straightFirst:false,straightLast:false,strokeWidth:2});
+			l.setProperty({fixed:true})
+		}
+   		chart_update_freq();
+   	}
+}
+
 
 function chart_btnUpdateFrequency(element)
 {
@@ -329,7 +448,6 @@ function chart_update_freq()
     chart_createFrequencyChartFromForm();
     chart_updateFrequencyForStudent();
 }
-
 
 
 

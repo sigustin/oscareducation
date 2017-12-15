@@ -14,26 +14,11 @@ var barMaxY = [];
 var barPoints = [[]];
 var precisionValue = [];
 var chart_opacity = 1;
-$( document ).ready(function() {
+$( document ).ready(function() {	
+    chart_changeInput($scope)
     chart_refresh();
 });
 
-function chart_changeInput($scope)
-{
-    $scope.barGraphX = "abscisses";
-    $scope.barGraphY = "ordonnees";
-    $scope.stepX = 1;
-    $scope.stepY = 1;
-    $scope.precisionValue = 1;
-
-    $scope.zeroX = -1;
-    $scope.zeroY = -1;
-    $scope.maxX = 10;
-    $scope.maxY = 10;
-
-    $scope.sector = 90;
-    $scope.labelPie = "secteur";
-}
 
 function chart_refresh()
 {
@@ -157,6 +142,7 @@ function chart_updateForStudent()
         }
 
         let board = JXG.JSXGraph.initBoard(element.id,{ id:"chart-barChartFromForm-"+i,axis:false,showCopyright:false, boundingbox:box});
+        
         this.boardBarChart[i] = board;
         xaxis = board.create('axis', [[0,0],[1,0]],
                     {name:r.barAxisX,
@@ -182,6 +168,7 @@ function chart_updateForStudent()
             let p = this.boardBarChart[i].create('point',[j+1,this.barPoints[i][j].Y()],{name:'',size:7,face:'^'});
             temp.push(p);
         }
+		
         this.barPoints[i] = temp;
         this.bars[i] = []
         for(var j = 0;j<this.barPoints[i].length;j++)
@@ -378,41 +365,6 @@ function chart_update()
 }
 
 
-
-function chart_changeScopeQuestions(questions)
-{
-    var counterBar = 0;
-    var counterPie = 0;
-    var counterFrequency = 0;
-    for(var i = 0;i<questions.length;i++)
-    {
-        if(questions[i].type == "chart-barchart")
-        {
-            for(var j = 0;j<questions[i].answers.length;j++)
-            {
-                questions[i].answers[j].chart = chart_getJSONBar(counterBar);
-                counterBar++;
-            }
-        }
-        if(questions[i].type == "chart-piechart")
-        {
-            for(var j = 0;j<questions[i].answers.length;j++)
-            {
-                questions[i].answers[j].chart = chart_getJSONPie(counterPie);
-                counterPie++;
-            }
-        }
-        if(questions[i].type == "chart-frequencychart")
-        {
-            for(var j = 0;j<questions[i].answers.length;j++)
-            {
-                questions[i].answers[j].chart = chart_getJSONFrequency(counterFrequency);
-                counterFrequency++;
-            }
-        }
-    }
-    return questions;
-}
 
 
 function chart_deleteLastBar(element)

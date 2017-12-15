@@ -1591,6 +1591,24 @@ def exercice_validation_form_submit(request, pk=None):
                     "type": question["type"],
                     "answers": question["answers"],
                 }
+            
+            #Group 7
+            elif question["type"] == "chart-frequencychart":
+                answers = []
+
+                for answer in question["answers"]:
+                    if "latex" in answer:
+                        del answer["latex"]
+                    if "correct" in answer:
+                        del answer["correct"]
+                    if "text" in answer:
+                        del answer["text"]
+                    answers.append(answer)
+
+                new_question_answers = {
+                    "type": question["type"],
+                    "answers": question["answers"],
+                }
 
             else:
                 answers = CommentedMap()

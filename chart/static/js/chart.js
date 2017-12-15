@@ -99,5 +99,3 @@ function chart_changeScopeQuestions(questions)
     }
     return questions;
 }
-
-

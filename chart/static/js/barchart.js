@@ -361,34 +361,6 @@ function chart_update()
 
 
 
-<<<<<<< HEAD
-function chart_changeScopeQuestions(questions)
-{
-	alert("yo")
-    var counterBar = 0;
-    var counterPie = 0;
-    for(var i = 0;i<questions.length;i++)
-    {
-        if(questions[i].type == "chart-barchart")
-        {
-            for(var j = 0;j<questions[i].answers.length;j++)
-            {
-                questions[i].answers[j].chart = chart_getJSONBar(counterBar);
-                counterBar++;
-            }
-        }
-        if(questions[i].type == "chart-piechart")
-        {
-            for(var j = 0;j<questions[i].answers.length;j++)
-            {
-                questions[i].answers[j].chart = chart_getJSONPie(counterPie);
-                counterPie++;
-            }
-        }
-    }
-    return questions;
-}
-
 
 function chart_deleteLastBar(element)
 {

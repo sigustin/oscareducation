@@ -385,6 +385,7 @@ function chart_update()
 
 function chart_changeScopeQuestions(questions)
 {
+	alert("yo")
     var counterBar = 0;
     var counterPie = 0;
     for(var i = 0;i<questions.length;i++)

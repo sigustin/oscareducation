@@ -1,9 +1,4 @@
 
-$( document ).ready(function() {
-    chart_refreshFrequency()
-    chart_refreshBar()
-});
-
 
 round = function(value) {
     return Number(value.toFixed(0));

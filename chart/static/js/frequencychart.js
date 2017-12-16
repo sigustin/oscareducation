@@ -12,8 +12,30 @@ var frequencyMaxY = [];
 var frequencyZeroX = [];
 var frequencyZeroY = [];
 var chart_opacity = 1;
+
+
+$( document ).ready(function() {
+	
+    chart_refreshFrequency()
+});
+
+
 function chart_refreshFrequency()
 {
+    if($("#frequencychart-hiddenInput"))
+    {
+        //update the hidden field every 1/2 second. It works.
+        setInterval(function(){
+            var bar = [];
+            for(var i = 0;i<points[0].length;i++){
+                bar.push([this.frequencyPoints[0][i].X(),this.frequencyPoints[0][i].Y()]);
+            }
+
+            $("#frequencychart-hiddenInput").val(bar);
+
+        }, 500);
+
+    }
     chart_update_freq();
 }
 

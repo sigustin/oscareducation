@@ -100,6 +100,7 @@
                   %button.btn.btn-danger.btn-deleteFrequency{onclick: "chart_deleteLastFrequency($(this))", type: "button"}
                     %span.glyphicon.glyphicon-minus
                     Supprimer la dernière
+              %input{type: "hidden", value: "", name: "{{ name }}", id: "frequencychart-hiddenInput"}
           -elif answer.type == "professor"
             %input.form-control{id: "{{ forloop.counter0 }}", name: "{{ forloop.counter0 }}", type: "text", autocomplete: "off"}
             -#%textarea.form-control{id: "{{ forloop.counter0 }}", name: "{{ forloop.counter0 }}", rows: "5"}

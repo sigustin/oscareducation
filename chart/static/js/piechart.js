@@ -3,6 +3,16 @@ labels = [[]];
 colors = ['#0F408D','#6F1B75','#CA147A','#DA2228','#E8801B','#FCF302','#8DC922','#15993C','#87CCEE','#0092CE']
 
 
+$( document ).ready(function() {
+	
+	if($("#piechart-hiddenInput"))
+    {
+        //update the hidden field every 1/2 second. It works.
+        setInterval(changePieChartHiddenInput, 500);    
+    }
+});
+
+
 var changePieChartHiddenInput = function()
 {
     var data = {"data":dataArr[0],"labels":labels[0]}

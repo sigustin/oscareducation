@@ -15,6 +15,11 @@ var points = [[]];
 var precisionValue = [];
 var chart_opacity = 1;
 
+$( document ).ready(function() {
+    chart_refreshBar()
+});
+
+
 function chart_refreshBar()
 {
     var graphics = document.getElementsByClassName("chartQuestion");  //find all charts on the page
@@ -36,13 +41,6 @@ function chart_refreshBar()
             $("#barchart-hiddenInput").val(bar);
 
         }, 500);
-
-    }
-
-    if($("#piechart-hiddenInput"))
-    {
-        //update the hidden field every 1/2 second. It works.
-        setInterval(changePieChartHiddenInput, 500);
 
     }
 }
@@ -109,7 +107,6 @@ function chart_updateBarForStudent()
         r.AxisX = " nope";
         r.AxisY = " Nope";
         var box = [-1, 5, 5, -1];
-
 
         if(rawData2 != null)
         {

@@ -151,7 +151,7 @@ class BlogDriver(unittest.TestCase):
         	driver.find_element_by_xpath(" *//a[@class = 'btn btn-lg btn-primary']").click()
         	i += 1
 			
-		time.sleep(5)
+		time.sleep(10)
 		#self.assertTrue("/modify/" not in driver.current_url)
 		
 		i = 0
@@ -160,7 +160,7 @@ class BlogDriver(unittest.TestCase):
 			driver.find_element_by_xpath(" *//a[@href = '/professor/lesson/134/test/']").click()
 			i += 1
 			
-		time.sleep(5)
+		time.sleep(10)
 		self.assertTrue(driver.current_url.endswith("/test/"))
 
 	def is_element_present(self, how, what):

@@ -1,45 +1,12 @@
 
+$( document ).ready(function() {
+    chart_refreshFrequency()
+    chart_refreshBar()
+});
+
 
 round = function(value) {
     return Number(value.toFixed(0));
-}
-
-var getMouseCoords = function(e, i) {
-    var cPos = brd.getCoordsTopLeftCorner(e, i),
-    absPos = JXG.getPosition(e, i),
-    dx = absPos[0]-cPos[0],
-    dy = absPos[1]-cPos[1];
-
-    return new JXG.Coords(JXG.COORDS_BY_SCREEN, [dx, dy], brd);
-}
-
-down = function(e) {
-    var canCreate = true, i, coords, el;
-
-    if (e[JXG.touchProperty]) {
-        // index of the finger that is used to extract the coordinates
-        i = 0;
-    }
-    coords = getMouseCoords(e, i);
-
-    for (el in brd.objects) {
-        if(JXG.isPoint(brd.objects[el]) && brd.objects[el].hasPoint(coords.scrCoords[1], coords.scrCoords[2])) {
-            canCreate = false;
-            break;
-        }
-    }
-
-    if (canCreate && points.length < numberOfPoints) {
-        var point = brd.create('point', [round(coords.usrCoords[1]), round(coords.usrCoords[2])]);
-        points.push(point);
-
-        if (points.length > 1) {
-            brd.create('line', [points[points.length - 2], points[points.length - 1]], {straightFirst:false, straightLast:false})
-        }
-
-        if (points.length == numberOfPoints)
-            brd.create('line', [points[points.length - 1], points[0]], {straightFirst:false, straightLast:false})
-    }
 }
 
 function chart_changeInput($scope)

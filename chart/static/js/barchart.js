@@ -14,35 +14,15 @@ var maxY = [];
 var points = [[]];
 var precisionValue = [];
 var chart_opacity = 1;
-$( document ).ready(function() {
-    chart_refresh();
-});
 
-function chart_changeInput($scope)
-{
-    $scope.barGraphX = "abscisses";
-    $scope.barGraphY = "ordonnees";
-    $scope.stepX = 1;
-    $scope.stepY = 1;
-    $scope.precisionValue = 1;
-
-    $scope.zeroX = -1;
-    $scope.zeroY = -1;
-    $scope.maxX = 10;
-    $scope.maxY = 10;
-
-    $scope.sector = 90;
-    $scope.labelPie = "secteur";
-}
-
-function chart_refresh()
+function chart_refreshBar()
 {
     var graphics = document.getElementsByClassName("chartQuestion");  //find all charts on the page
     for(var i = 0;i<graphics.length;i++){
         console.log("found "+graphics.length+" graphics");
-        chart_createChart(graphics[i]);  //create the element founded
+        chart_createBarChart(graphics[i]);  //create the element founded
     }
-    chart_createBarChartFromForm()
+    chart_updateBar()
 
     if($("#barchart-hiddenInput"))
     {
@@ -65,7 +45,6 @@ function chart_refresh()
         setInterval(changePieChartHiddenInput, 500);
 
     }
-
 }
 
 function chart_setBars()
@@ -112,7 +91,7 @@ function chart_setOrigin(zX,zY,mX,mY,which)
 }
 
 
-function chart_updateForStudent()
+function chart_updateBarForStudent()
 {
     graphics = document.getElementsByClassName("chartQuestionStudent");
 	var element;
@@ -282,10 +261,9 @@ function chart_createBarChartFromForm()
 
 }
 
-function chart_createChart(element)
+function chart_createBarChart(element)
 {
     var type = $(element).data( "chart-type" );
-
     var rawData = $(element).data( "chart-raw" );
     var rawData2 = $(element).data( "chart-raw2" );
     var rawData3 = $(element).data( "chart-raw3" );
@@ -346,7 +324,7 @@ function chart_createChart(element)
 
     }
 
-    chart_updateForStudent();
+    chart_updateBarForStudent();
 }
 
 function chart_getPointValue(points,index)
@@ -364,7 +342,7 @@ function chart_add(element)
 	var p = this.boardBarChart[index].create('point',[this.bars[index].length+1,newBarY],{name:'',size:7,face:'^'});
 	chart_addBar(newBarY,index);
 	chart_addPoint(p,index);
-    chart_update();
+    chart_updateBar();
 }
 
 
@@ -374,41 +352,13 @@ function chart_btnUpdate(element)
     chart_createBarChartFromForm();
 
 }
-function chart_update()
+function chart_updateBar()
 {
     chart_createBarChartFromForm();
-    chart_updateForStudent();
+    chart_updateBarForStudent();
 
 }
 
-
-
-function chart_changeScopeQuestions(questions)
-{
-	alert("yo")
-    var counterBar = 0;
-    var counterPie = 0;
-    for(var i = 0;i<questions.length;i++)
-    {
-        if(questions[i].type == "chart-barchart")
-        {
-            for(var j = 0;j<questions[i].answers.length;j++)
-            {
-                questions[i].answers[j].chart = chart_getJSONBar(counterBar);
-                counterBar++;
-            }
-        }
-        if(questions[i].type == "chart-piechart")
-        {
-            for(var j = 0;j<questions[i].answers.length;j++)
-            {
-                questions[i].answers[j].chart = chart_getJSONPie(counterPie);
-                counterPie++;
-            }
-        }
-    }
-    return questions;
-}
 
 
 function chart_deleteLastBar(element)
@@ -416,7 +366,7 @@ function chart_deleteLastBar(element)
     var index = $(".btn-deleteBar").index(element);
     chart_removeBar(index);
     chart_removePoint(index);
-    chart_update();
+    chart_updateBar();
 }
 
 function chart_getJSONBar(index)

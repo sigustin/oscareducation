@@ -40,6 +40,7 @@
                 %input{type: "number", value: "", name: "graph-{{ toploop_counter0 }}-{{ answer.graph.type }}-{{ forloop.counter0 }}-X", id: "graph-{{ toploop_counter0 }}-{{ answer.graph.type }}-{{ forloop.counter0 }}-X"}
                 %input{type: "number", value: "", name: "graph-{{ toploop_counter0 }}-{{ answer.graph.type }}-{{ forloop.counter0 }}-Y", id: "graph-{{ toploop_counter0 }}-{{ answer.graph.type }}-{{ forloop.counter0 }}-Y"}
           -elif answer.type == "chart-barchart"
+            %script{type: "text/javascript", src: "/static/js/chart.js"}
             %script{type: "text/javascript", src: "/static/js/barchart.js"}
             -with name=forloop.counter0
               -# Group 7
@@ -55,32 +56,50 @@
                     %span.glyphicon.glyphicon-plus
                     Ajouter
                 .col-sm-3
-                  %button.btn.btn-danger.btn-deleteBar{onclick: "chart_deleteLast($(this))", type: "button"}
+                  %button.btn.btn-danger.btn-deleteBar{onclick: "chart_deleteLastBar($(this))", type: "button"}
                     %span.glyphicon.glyphicon-minus
                     Supprimer la dernière
           -elif answer.type == "chart-piechart"
-            %script{type: "text/javascript", src: "/static/js/barchart.js"}
+            %script{type: "text/javascript", src: "/static/js/chart.js"}
             %script{type: "text/javascript", src: "/static/js/piechart.js"}
             -with name=forloop.counter0
               -# Group 7
               .form-group
-                %label.control-label.col-sm-3 Amplitude du secteur
+                %label.control-label.col-sm-3 Ajouter un nouveau secteur (en degrée)
                 .col-sm-3
                   %input.form-control{id: "sector",class: "sector",type: "number", ng-model: "sector", ng-required: "false"}
-                %label.control-label.col-sm-3 Nom du secteur
                 .col-sm-3
-                  %input.form-control{id: "labelPie",class: "labelPie",type: "text", ng-model: "labelPie", ng-required: "false"}
-              .form-group
-                .col-sm-2
                   %button.btn.btn-success.btn-addPie{onclick: "chart_createPieChartFromForm()", type: "button"}
                     %span.glyphicon.glyphicon-plus
                     Ajouter
-                .col-sm-2
-                  %button.btn.btn-danger.btn-deletePie{onclick: "chart_deleteLastPie($(this))", type: "button", class:"btn-deletePie"}
+                .col-sm-3
+                  %button.btn.btn-danger.btn-deletePie{onclick: "chart_deleteLastPie($(this))", type: "button"}
+                    %span.glyphicon.glyphicon-minus
+                    Supprimer le dernier
+              %input{type: "hidden", value: "", name: "{{ name }}", id: "piechart-hiddenInput"}
+              .jxgbox.chartQuestion.chartQuestionStudent#jxgboxPreview{id:pieChartForm,style:"width:634px; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart",data-chart-raw3:"{{answer.answers}}"}
+          -elif answer.type == "chart-frequencychart"
+            %script{type: "text/javascript", src: "/static/js/chart.js"}
+            %script{type: "text/javascript", src: "/static/js/frequencychart.js"}
+            -with name=forloop.counter0
+              -# Group 7
+              .jxgbox.chartQuestion.chartQuestionStudent#jxgboxPreview{id:frequencyChartForm,style:"width:634px; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-frequencychart",value:"chart-frequencychart",data-chart-raw3:"{{answer.answers}}"}
+              .form-group
+                %label.control-label.col-sm-3 Ordonnée du nouveau point
+                .col-sm-3
+                  %input.form-control{id: "newFrequencyY",class: "newFrequencyY",type: "number", ng-model: "newFrequencyY", ng-required: "false"}
+                %label.control-label.col-sm-3 Abscisse du nouveau point
+                .col-sm-3
+                  %input.form-control{id: "newFrequencyX",class: "newFrequencyX",type: "number", ng-model: "newFrequencyX", ng-required: "false"}
+              .form-group
+                .col-sm-3
+                  %button.btn.btn-success.btn-addFrequency{onclick: "chart_addFrequency($(this))", type: "button"}
+                    %span.glyphicon.glyphicon-plus
+                    Ajouter
+                .col-sm-3
+                  %button.btn.btn-danger.btn-deleteFrequency{onclick: "chart_deleteLastFrequency($(this))", type: "button"}
                     %span.glyphicon.glyphicon-minus
                     Supprimer la dernière
-              %input{type: "hidden", value: "", name: "{{ name }}", id: "piechart-hiddenInput"}
-              .jxgbox.chartQuestion.chartQuestionStudent.chartQuestionPiechart#jxgboxPreview{id:pieChartForm,style:"width:634px; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart",data-chart-raw3:"{{answer.answers}}"}
           -elif answer.type == "professor"
             %input.form-control{id: "{{ forloop.counter0 }}", name: "{{ forloop.counter0 }}", type: "text", autocomplete: "off"}
             -#%textarea.form-control{id: "{{ forloop.counter0 }}", name: "{{ forloop.counter0 }}", rows: "5"}
@@ -93,3 +112,4 @@
     body {
       padding-bottom: 200px;
     }
+

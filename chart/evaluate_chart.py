@@ -98,7 +98,10 @@ def evaluate_chart(question, response):
                 if sameTupleArray(correct_answer, student_answers):
                     return 1
             return 0
+        elif evaluation_type == "chart-frequencychart":
+            return 0
         else:
             return -1
     except ValueError as e:
         return -1
+

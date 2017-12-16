@@ -72,6 +72,25 @@
               %span.glyphicon.glyphicon-minus
               Supprimer la dernière
         .jxgbox.chartQuestion#jxgboxPreview{id:pieChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-piechart",value:"chart-piechart",data-chart-raw:"{{question.answers}}"}
+      -elif question.type == "chart-frequencychart"
+        .form-group{style :"overflow: hidden;"}
+          %label.control-label.col-sm-3 Ordonnée du nouveau point
+          .col-sm-3
+            %input.form-control{id: "pY",type: "number", ng-model: "pY", ng-required: "false", disabled:"disabled"}
+          %label.control-label.col-sm-3 Abscisse du nouveau point
+          .col-sm-3
+            %input.form-control{id: "pX",type: "number", ng-model: "pX", ng-required: "false", disabled:"disabled"}
+        .form-group{style :"overflow: hidden;"}
+          .col-sm-2
+            %button.btn.btn-success{onclick: "chart_addFrequency()", type: "button", disabled:"disabled"}
+              %span.glyphicon.glyphicon-plus
+              Ajouter
+          .col-sm-4
+            %button.btn.btn-danger{onclick: "chart_deleteLastFrequency()", type: "button", disabled:"disabled"}
+              %span.glyphicon.glyphicon-minus
+              Supprimer la dernière
+        .jxgbox.chartQuestion#jxgboxPreview{id:frequencyChartForm,style:"width:100%; height:676px;margin-top:20px;margin-bottom:20px;",data-chart-type:"chart-frequencychart",value:"chart-frequencychart",data-chart-raw:"{{question.answers}}"}
+
 
       -elif question.type == "professor"
         %i A corriger par le professeur

@@ -116,7 +116,7 @@ class BlogDriver(unittest.TestCase):
         pres = driver.find_element_by_id("precisionValue")
         pres.clear()
         pres.send_keys("1")
-        driver.find_element_by_xpath("//button[@ng-model='createBarCart']").click()
+        driver.find_element_by_xpath("//button[@ng-model='createBarChart']").click()
         barre = driver.find_element_by_id("newBarY")
         barre.clear()
         ajouter = driver.find_element_by_css_selector('[onclick="chart_add($(this))"]')

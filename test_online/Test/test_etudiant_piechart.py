@@ -26,8 +26,18 @@ class BlogDriver(unittest.TestCase):
         time.sleep(3)
         driver.find_element_by_xpath("//button[@type='submit']").click() #Do this if it is the first time that he open the exercice page
         time.sleep(3)
-        driver.find_element_by_xpath("//input[@type='submit']").click()
-        time.sleep(3)
+       	element = driver.find_element_by_id("sector")
+       	element.clear()
+       	element.send_keys("30")
+       	driver.find_element_by_css_selector("button.btn.btn-success.btn-addPie").click()
+       	time.sleep(1)
+       	element.clear()
+       	element.send_keys("45")
+       	driver.find_element_by_css_selector("button.btn.btn-success.btn-addPie").click()
+       	time.sleep(3)
+       	
+       	driver.find_element_by_css_selector("input.btn.btn-primary").click()
+       	
         
     def is_element_present(self, how, what):
     	try:

@@ -311,8 +311,6 @@ function chart_createFrequencyChartFromForm()
         }
 	}
 
-
-
 }
 
 

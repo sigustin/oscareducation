@@ -187,9 +187,6 @@ def validate_exercice(request, test_student, test_exercice):
             elif data["type"] == "chart-barchart":
                 raw_answer[number]["response"] = [request.POST[str(number)]]
             elif data["type"] == "chart-piechart":
-            	print("yeaaaah")
-            	print(data)
-            	print(request.POST[str(number)])
                 raw_answer[number]["response"] = [request.POST[str(number)]]
             elif data["type"] == "chart-frequencychart":
             	#TODO
